@@ -3,36 +3,42 @@ import time
 import logging
 from functools import wraps
 
-def my_logger(orig_func):
+def logger(function):
 
-    logging.basicConfig(filename='{}.log'.format(orig_func.__name__), level=logging.INFO)
+    logging.basicConfig(filename='{}.log'.format(function.__name__), level=logging.INFO)
 
-    @wraps(orig_func)
+    @wraps(function)
     def wrapper(*args, **kwargs):
         logging.info(
             'Ran with args: {}, and kwargs: {}'.format(args, kwargs))
-        return orig_func(*args, **kwargs)
+        return function(*args, **kwargs)
 
     return wrapper
 
 
-def my_timer(orig_func):
+def timer(function):
 
-    @wraps(orig_func)
+    @wraps(function)
     def wrapper(*args, **kwargs):
-        t1 = time.time()
-        result = orig_func(*args, **kwargs)
-        t2 = time.time() - t1
-        print('{} ran in: {} sec'.format(orig_func.__name__, t2))
+        t1 = time.perf_counter()
+        result = function(*args, **kwargs)
+        t2 = time.perf_counter()
+        print('{} ran in: {} sec'.format(function.__name__, round(t2 - t1, 4)))
         return result
 
     return wrapper
 
 
-@my_logger
-@my_timer
-def display_info(name, age):
-    time.sleep(1)
-    print('display_info ran with arguments ({}, {})'.format(name, age))
+def test_decorator(function, param):
+    print(param)
 
-display_info('Tom', 22)
+    def wrapper():
+        return function()
+
+    return wrapper
+
+@test_decorator
+def test_func():
+    print('test func')
+
+test_func()
