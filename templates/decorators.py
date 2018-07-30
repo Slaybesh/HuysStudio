@@ -16,16 +16,26 @@ def logger(function):
     return wrapper
 
 
-def timer_loop(n=1):
+def timer_loop(n=100, repeat=1):
     def loop(function):
 
         @wraps(function)
         def wrapper(*args, **kwargs):
-            t1 = time.perf_counter()
-            for _ in range(n):
-                result = function(*args, **kwargs)
-            t2 = time.perf_counter()
-            print('{} ran in: {} sec'.format(function.__name__, round(t2 - t1, 4)))
+
+            repeat_vals = []
+            for _ in range(repeat):
+                t1 = time.perf_counter()
+
+                for _ in range(n):
+                    result = function(*args, **kwargs)
+
+                t2 = time.perf_counter()
+                # print('{} ran in: {} sec'.format(function.__name__, round(t2 - t1, 6)))
+                repeat_vals.append(t2 - t1)
+
+            average_time = sum(repeat_vals) / len(repeat_vals)
+
+            print('{} ran on average in: {} sec'.format(function.__name__, round(average_time, 6)))
             return result
 
         return wrapper
@@ -59,9 +69,3 @@ def decorator_with_arguments(param):
         return wrapper
 
     return actual_decorator
-
-@timer_loop(20)
-def test_func():
-    print('test func')
-
-test_func()

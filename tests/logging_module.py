@@ -1,6 +1,8 @@
+import __init__
 import logging
+import timeit
 
-from .decorators import *
+from python_tests.templates.decorators import *
 
 
 #region logging
@@ -37,9 +39,3 @@ def create_logger(name, level='debug'):
 logger_do_sth = create_logger('do_sth')
 #endregion logging
 
-@timer_loop(1000)
-def do_sth():
-    logger = logger_do_sth
-    logger.debug('doing something')
-
-do_sth()
