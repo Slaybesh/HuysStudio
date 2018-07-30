@@ -3,11 +3,11 @@ import time
 from python_tests.templates.decorators import *
 
 
-wait_time = 0.0001
+wait_time = 0.001
 n = int(1/wait_time)
 n = 1000
 print(n)
-repeat = 10
+repeat = 1
 
 @timer_loop(n=n, repeat=repeat)
 def sleeper():
