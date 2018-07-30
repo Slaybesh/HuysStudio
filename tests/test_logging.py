@@ -1,5 +1,6 @@
 import logging
-import time
+
+from .decorators import *
 
 
 #region logging
@@ -36,14 +37,9 @@ def create_logger(name, level='debug'):
 logger_do_sth = create_logger('do_sth')
 #endregion logging
 
+@timer_loop(1000)
 def do_sth():
     logger = logger_do_sth
     logger.debug('doing something')
 
-
-start_time = time.perf_counter()
-for _ in range(1000000):
-    do_sth()
-
-end_time = time.perf_counter()
-print('time taken:', round(end_time - start_time, 20))
+do_sth()

@@ -1,4 +1,7 @@
+import time
 import logging
+from functools import wraps
+
 
 #region logging
 logging_filter = logging.Filter('')
@@ -33,8 +36,21 @@ def create_logger(name, level='debug'):
 
 logger_do_sth = create_logger('do_sth')
 #endregion logging
-import time
-from functools import wraps
+
+
+def decorator_with_arguments(param):
+
+    print(param)
+    def actual_decorator(function):
+
+        @wraps(function)
+        def wrapper():
+            return function()
+
+        return wrapper
+
+    return actual_decorator
+
 
 def logger(function):
 
@@ -48,21 +64,7 @@ def logger(function):
     return wrapper
 
 
-def timer(function):
-
-    @wraps(function)
-    def wrapper(*args, **kwargs):
-        t1 = time.perf_counter()
-        result = function(*args, **kwargs)
-        t2 = time.perf_counter()
-        print('{} ran in: {} sec'.format(function.__name__, round(t2 - t1, 4)))
-        return result
-
-    return wrapper
-
-
 @logger
-@timer
 def display_info(name, age):
     time.sleep(1)
     print('display_info ran with arguments ({}, {})'.format(name, age))

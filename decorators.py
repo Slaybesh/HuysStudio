@@ -16,6 +16,23 @@ def logger(function):
     return wrapper
 
 
+def timer_loop(n=1):
+    def loop(function):
+
+        @wraps(function)
+        def wrapper(*args, **kwargs):
+            t1 = time.perf_counter()
+            for _ in range(n):
+                result = function(*args, **kwargs)
+            t2 = time.perf_counter()
+            print('{} ran in: {} sec'.format(function.__name__, round(t2 - t1, 4)))
+            return result
+
+        return wrapper
+
+    return loop
+
+
 def timer(function):
 
     @wraps(function)
@@ -29,15 +46,21 @@ def timer(function):
     return wrapper
 
 
-def test_decorator(function, param):
+
+def decorator_with_arguments(param):
+
     print(param)
+    def actual_decorator(function):
 
-    def wrapper():
-        return function()
+        @wraps(function)
+        def wrapper():
+            return function()
 
-    return wrapper
+        return wrapper
 
-@test_decorator
+    return actual_decorator
+
+@timer_loop(20)
 def test_func():
     print('test func')
 
