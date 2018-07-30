@@ -1,35 +1,48 @@
 import logging
 
+log_filter = ''
+log_level = logging.INFO
 #region logging
-logging_filter = logging.Filter('')
+logging_filter = logging.Filter(log_filter)
 
-formatting = logging.Formatter('%(levelname)s: %(name)s: %(message)s')
+levels = {
+    'debug': logging.DEBUG,
+    'info': logging.INFO,
+    'warning': logging.WARNING,
+    'error': logging.ERROR,
+    'critical': logging.CRITICAL}
 
-file_handler = logging.FileHandler('logger.log')
-file_handler.setLevel(logging.WARNING)
-file_handler.setFormatter(formatting)
+formatter = logging.Formatter('%(levelname)s: line %(lineno)d: %(name)s: %(message)s')
+formatter_date = logging.Formatter("%(asctime)s: %(levelname)s: %(name)s: line %(lineno)d: %(message)s", "%d.%m.%y %H:%M:%S")
+
+file_handler = logging.FileHandler('{}.errorlog'.format(__name__))
+file_handler.setLevel(logging.error)
+file_handler.setFormatter(formatter_date)
 
 stream_handler = logging.StreamHandler()
-stream_handler.setFormatter(formatting)
+stream_handler.setFormatter(formatter)
+stream_handler.setLevel(log_level)
 stream_handler.addFilter(logging_filter)
 
-def create_logger(name, level='debug'):
-    levels = {
-        'debug': logging.DEBUG,
-        'info': logging.INFO,
-        'warning': logging.WARNING,
-        'error': logging.ERROR,
-        'critical': logging.CRITICAL}
+error_stream_handler = logging.StreamHandler()
+error_stream_handler.setFormatter(formatter)
+error_stream_handler.setLevel(logging.ERROR)
 
-    logger = logging.getLogger(name)
+loggers = {}
+def get_logger(name):
 
-    logger.propagate = False
-    logger.addHandler(stream_handler)
-    logger.addHandler(file_handler)
-    logger.setLevel(levels[level])
-    logger.addFilter(logging_filter)
+    if name not in loggers:
 
-    return logger
+        new_logger = logging.getLogger(name)
 
-logger_do_sth = create_logger('do_sth')
+        new_logger.propagate = False
+        new_logger.setLevel(log_level)
+        new_logger.addHandler(file_handler)
+        new_logger.addHandler(stream_handler)
+        if log_filter:
+            new_logger.addHandler(error_stream_handler)
+
+        loggers[name] = new_logger
+
+    return loggers[name]
 #endregion logging

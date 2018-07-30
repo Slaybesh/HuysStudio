@@ -7,7 +7,6 @@ log_filter = ''
 log_level = logging.INFO
 #region logging
 logging_filter = logging.Filter(log_filter)
-# level = 'debug'
 
 levels = {
     'debug': logging.DEBUG,
@@ -42,7 +41,7 @@ def get_logger(name):
         new_logger.propagate = False
         new_logger.setLevel(log_level)
         new_logger.addHandler(file_handler)
-        # new_logger.addHandler(stream_handler)
+        new_logger.addHandler(stream_handler)
         if log_filter:
             new_logger.addHandler(error_stream_handler)
 
