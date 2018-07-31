@@ -16,7 +16,7 @@ formatter = logging.Formatter('%(levelname)s: line %(lineno)d: %(name)s: %(messa
 formatter_date = logging.Formatter("%(asctime)s: %(levelname)s: %(name)s: line %(lineno)d: %(message)s", "%d.%m.%y %H:%M:%S")
 
 file_handler = logging.FileHandler('{}.errorlog'.format(__name__))
-file_handler.setLevel(logging.error)
+file_handler.setLevel(logging.ERROR)
 file_handler.setFormatter(formatter_date)
 
 stream_handler = logging.StreamHandler()
