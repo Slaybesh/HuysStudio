@@ -79,7 +79,7 @@ def timer_loop(n=100, repeat=1):
 
             average_time = sum(repeat_vals) / len(repeat_vals)
 
-            print('{} ran on average in: {} sec'.format(function.__name__, round(average_time, 6)))
+            print('{} ran on average in: {} sec'.format(function.__name__, round(average_time, 4)))
             return result
 
         return wrapper
