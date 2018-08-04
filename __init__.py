@@ -2,16 +2,27 @@ import sys
 import os
 import time
 
-timer = time.perf_counter()
-while os.getcwd().split('\\')[-1] != 'GitHub':
+def get_github_path():
 
-    os.chdir('..')
+    orig_path = os.getcwd()
 
-    if time.perf_counter() - timer > 2:
-        print('Can not find GitHub folder.')
-        break
+    timer = time.perf_counter()
+    while os.getcwd().split('\\')[-1] != 'GitHub':
 
-sys.path.append(os.getcwd())
+        os.chdir('..')
+
+        if time.perf_counter() - timer > 2:
+            print('Can not find GitHub folder.')
+            break
+
+    github_path = os.getcwd()
+
+    os.chdir(orig_path)
+
+    return orig_path
+
+github_path = get_github_path()
+sys.path.append(github_path)
 
 # print('sys.argv: {0!r}'.format(sys.argv))
 # print('sys.path: {0!r}'.format(sys.path))
