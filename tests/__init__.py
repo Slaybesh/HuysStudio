@@ -19,7 +19,7 @@ def get_github_path():
 
     os.chdir(orig_path)
 
-    return orig_path
+    return github_path
 
 github_path = get_github_path()
 sys.path.append(github_path)

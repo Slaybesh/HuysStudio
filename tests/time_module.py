@@ -1,13 +1,19 @@
-import __init__
 import time
-from python_tests.templates.decorators import *
+import sys
+
+import __init__
+from huys_python.templates.decorators import *
 
 
-wait_time = 0.001
+wait_time = 0.00001
 n = int(1/wait_time)
-n = 1000
+n = 10000
 print(n)
-repeat = 1
+repeat = 10
+
+@timer_loop(n=n, repeat=repeat)
+def timer():
+    time_ = time.perf_counter()
 
 @timer_loop(n=n, repeat=repeat)
 def sleeper():
@@ -22,5 +28,5 @@ def perf():
 # time_taken = timeit.repeat(do_sth, number=100000)
 # print(time_taken)
 
-perf()
-# sleeper()
+# perf()
+timer()
