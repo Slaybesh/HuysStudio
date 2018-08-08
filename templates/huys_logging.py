@@ -1,4 +1,5 @@
 import logging
+import os
 
 levels = {
     'debug': logging.DEBUG,
@@ -8,52 +9,51 @@ levels = {
     'critical': logging.CRITICAL}
 
 
-def configure_loggers(level='debug', filter_str='', file_handler_str=''):
+class Logging:
+    def __init__(self, name, level='error', filter_str='', create_file=False):
 
-    global log_level
-    log_level = levels[level]
+        self.log_level = levels[level]
+        self.filter_str = filter_str
+        self.create_file = create_file
 
-    global log_filter
-    log_filter = filter_str
+        formatter_stream = logging.Formatter('%(levelname)s: {}.%(name)s: line %(lineno)d: %(message)s'.format(name))
+        formatter_file = logging.Formatter('%(asctime)s: %(levelname)s: %(name)s: line %(lineno)d: %(message)s', '%d.%m.%y %H:%M:%S')
 
-    formatter = logging.Formatter('%(levelname)s: %(name)s: line %(lineno)d: %(message)s')
-    formatter_date = logging.Formatter('%(asctime)s: %(levelname)s: %(name)s: line %(lineno)d: %(message)s', '%d.%m.%y %H:%M:%S')
+        self.stream_handler = logging.StreamHandler()
+        self.stream_handler.setLevel(self.log_level)
+        self.stream_handler.setFormatter(formatter_stream)
+        self.stream_handler.addFilter(logging.Filter(self.filter_str))
 
-    global stream_handler
-    stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(log_level)
-    stream_handler.setFormatter(formatter)
-    stream_handler.addFilter(logging.Filter(log_filter))
-
-    global error_stream_handler
-    error_stream_handler = logging.StreamHandler()
-    error_stream_handler.setLevel(levels['error'])
-    error_stream_handler.setFormatter(formatter)
-
-    global file_handler_name
-    file_handler_name = file_handler_str
-    global file_handler
-    if file_handler_name:
-        file_handler = logging.FileHandler('{}_error.log'.format(file_handler_name))
-        file_handler.setLevel(levels['error'])
-        file_handler.setFormatter(formatter_date)
+        self.error_stream_handler = logging.StreamHandler()
+        self.error_stream_handler.setLevel(levels['error'])
+        self.error_stream_handler.setFormatter(formatter_stream)
 
 
-loggers = {}
-def get_logger(name):
+        if create_file:
 
-    if name not in loggers:
-        
-        new_logger = logging.getLogger(name)
+            if not os.path.exists('logs'):
+                os.makedirs('logs')
 
-        new_logger.propagate = False
-        new_logger.setLevel(log_level)
-        new_logger.addHandler(stream_handler)
-        if log_filter:
-            new_logger.addHandler(error_stream_handler)
-        if file_handler_name:
-            new_logger.addHandler(file_handler)
+            self.file_handler = logging.FileHandler('logs/{}_error.log'.format(name))
+            self.file_handler.setLevel(levels['error'])
+            self.file_handler.setFormatter(formatter_file)
 
-        loggers[name] = new_logger
+        self.loggers = {}
 
-    return loggers[name]
+    def get_logger(self, name):
+
+        if name not in self.loggers:
+            
+            new_logger = logging.getLogger('{}'.format(name))
+
+            new_logger.propagate = False
+            new_logger.setLevel(self.log_level)
+            new_logger.addHandler(self.stream_handler)
+            if self.filter_str:
+                new_logger.addHandler(self.error_stream_handler)
+            if self.create_file:
+                new_logger.addHandler(self.file_handler)
+
+            self.loggers[name] = new_logger
+
+        return self.loggers[name]
