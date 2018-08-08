@@ -8,7 +8,7 @@ from huys_python.templates.decorators import *
 def callback_func(result):
     print(result)
 
-executer = futures.ThreadPoolExecutor(max_workers=100)
+executer = futures.ProcessPoolExecutor()
 print(executer._max_workers)
 
 def parallel(fn):
@@ -21,16 +21,16 @@ def parallel(fn):
 
 import time
 
-@parallel
-@timer
+# @timer
+# @parallel
 def test_func():
     print('working for 1 sec')
     time.sleep(1)
     callback_func('finished working')
 
-def main():
-    for _ in range(100):
-        test_func()
+# def main():
+for _ in range(8):
+    executer.submit(test_func)
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
