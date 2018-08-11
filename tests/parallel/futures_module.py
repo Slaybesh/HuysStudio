@@ -10,12 +10,25 @@ def test_func():
     time.sleep(1)
     return 'finished working'
 
-# executer = futures.ThreadPoolExecutor()
-executer = futures.ProcessPoolExecutor()
+
+class TestClass:
+    def __init__(self):
+        # self.executer = futures.ProcessPoolExecutor()
+        pass
+
+    def do(self):
+        future = executer.submit(self.heavy_fn)
+        print(future.result())
+
+    def heavy_fn(self):
+        print('working for 1 sec')
+        time.sleep(1)
+        return 'finished'
+
 
 if __name__ == '__main__':
-    # result = executer.submit(test_func).add_done_callback(callback_func)
-    result = executer.submit(test_func).result()
-    print(result)
-    # callback_func(result)
+    executer = futures.ProcessPoolExecutor()
+
+    testclass = TestClass().do()
+
     print('something after')
