@@ -40,20 +40,27 @@ class TlsSMTPHandler(logging.handlers.SMTPHandler):
         except Exception:
             self.handleError(record)
 
+    def getSubject(self, record):
+
+        subject = self.format(record).split('\n', 1)[0]
+
+        return subject
+
+
 
 class Logging:
-    def __init__(self, name, level='error', filter_str='', create_file=False, email_subject=None):
+    def __init__(self, name, level='error', filter_str='', create_file=False, send_email=False):
 
-        self.executer = futures.ThreadPoolExecutor(max_workers=4)
+        self.executer = futures.ThreadPoolExecutor(max_workers=2)
 
         self.log_level = levels[level]
         self.filter_str = filter_str
         self.create_file = create_file
-        self.email_subject = email_subject
+        self.send_email = send_email
 
         formatter_stream = logging.Formatter('%(levelname)s: {}.%(name)s: line %(lineno)d: %(message)s'.format(name))
         formatter_file = logging.Formatter('%(asctime)s: %(levelname)s: %(name)s: line %(lineno)d: %(message)s', '%d.%m.%y %H:%M:%S')
-        formatter_email = logging.Formatter('%(asctime)s: %(levelname)s: {}.%(name)s: line %(lineno)d: %(message)s'.format(name), '%d.%m.%y %H:%M:%S')
+        formatter_email = logging.Formatter('{}.%(name)s: line %(lineno)d: %(message)s'.format(name))
 
         self.stream_handler = logging.StreamHandler()
         self.stream_handler.setLevel(self.log_level)
@@ -72,14 +79,14 @@ class Logging:
             self.file_handler.setLevel(levels['error'])
             self.file_handler.setFormatter(formatter_file)
 
-        if email_subject is not None:
+        if send_email:
             self.smtp_handler = TlsSMTPHandler(mailhost=('smtp.gmail.com', 587),
                                                fromaddr='', 
                                                toaddrs='huy_hoang@neuralaim.com',
-                                               subject=email_subject,
+                                               subject='',
                                                credentials=('neuralaim.error@gmail.com', 'Slaysilbesh11'))
             self.smtp_handler.setLevel(levels['error'])
-            self.smtp_handler.setFormatter(formatter_email)
+            self.smtp_handler.setFormatter(formatter_stream)
 
         self.logger = None
         self.loggers = {}
@@ -97,7 +104,7 @@ class Logging:
                 new_logger.addHandler(self.error_stream_handler)
             if self.create_file:
                 new_logger.addHandler(self.file_handler)
-            if self.email_subject:
+            if self.send_email:
                 new_logger.addHandler(self.smtp_handler)
 
             self.loggers[name] = new_logger
