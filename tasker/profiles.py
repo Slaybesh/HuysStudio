@@ -1,13 +1,13 @@
 def profile_disengage():
-    if time == 22 and wifi.connected():
+    if time == 22 and wifi_connected():
         disengage()
 
 def profile_wake_up():
-    if screen.off():
+    if screen_off():
         wake_up()
 
 def profile_engage():
-    if Disengage_until < time.time():
+    if Disengage_until < time_time():
         engage()
 
 
@@ -21,7 +21,7 @@ def profile_bad_app():
         max_dur: 1200,
         reset_time: max_dur * 3,
         max_freq: 10,
-        package: 'com.instagram.android',
+        package: 'com_instagram_android',
 
         dur: Instagram_dur,
         freq: Instagram_freq,
@@ -41,7 +41,7 @@ app_list = {
         blocked_until: 0, 
     },
 
-    'com.instagram.android': {
+    'com_instagram_android': {
         max_dur: 1200,
         max_freq: 10,
 
@@ -53,64 +53,60 @@ app_list = {
 }
 
 {
-    "com.whatsapp": [],
-    "com.google.android.apps.maps": [],
-    "com.google.android.gm": [],
-    "com.google.android.apps.inbox": [],
-    "com.snapchat.android": [{
-        "dur": "Dur_com.snapchat.android",
-        "blocked_until": "Blocked_untilcom.snapchat.android",
+    "com_snapchat_android": [{
+        "dur": "Dur_com_snapchat_android",
+        "blocked_until": "Blocked_until_com_snapchat_android",
         "max_dur": 10,
-        "last_used": "Last_used_com.snapchat.android",
-        "freq": "Freq_com.snapchat.android",
+        "last_used": "Last_used_com_snapchat_android",
+        "freq": "Freq_com_snapchat_android",
         "max_freq": 5
     }],
-    "com.tinder": [{
-        "dur": "Dur_com.tinder",
-        "blocked_until": "Blocked_untilcom.tinder",
+    "com_tinder": [{
+        "dur": "Dur_com_tinder",
+        "blocked_until": "Blocked_until_com_tinder",
         "max_dur": 20,
-        "last_used": "Last_used_com.tinder",
-        "freq": "Freq_com.tinder",
+        "last_used": "Last_used_com_tinder",
+        "freq": "Freq_com_tinder",
         "max_freq": 10
     }],
-    "com.google.android.youtube": [{
-        "dur": "Dur_com.google.android.youtube",
-        "blocked_until": "Blocked_untilcom.google.android.youtube",
+    "com_google_android_youtube": [{
+        "dur": "Dur_com_google_android_youtube",
+        "blocked_until": "Blocked_until_com_google_android_youtube",
         "max_dur": 1800,
-        "last_used": "Last_used_com.google.android.youtube",
-        "freq": "Freq_com.google.android.youtube",
+        "last_used": "Last_used_com_google_android_youtube",
+        "freq": "Freq_com_google_android_youtube",
         "max_freq": 10
     }],
-    "com.okcupid.okcupid": [{
-        "dur": "Dur_com.okcupid.okcupid",
-        "blocked_until": "Blocked_untilcom.okcupid.okcupid",
-        "max_dur": "0",
-        "last_used": "Last_used_com.okcupid.okcupid",
-        "freq": "Freq_com.okcupid.okcupid",
-        "max_freq": "0"
+    "com_okcupid_okcupid": [{
+        "dur": "Dur_com_okcupid_okcupid",
+        "blocked_until": "Blocked_until_com_okcupid_okcupid",
+        "max_dur": 20,
+        "last_used": "Last_used_com_okcupid_okcupid",
+        "freq": "Freq_com_okcupid_okcupid",
+        "max_freq": 10
     }],
-    "com.instagram.android": [{
-        "dur": "Dur_com.instagram.android",
-        "blocked_until": "Blocked_untilcom.instagram.android",
+    "com_instagram_android": [{
+        "dur": "Dur_com_instagram_android",
+        "blocked_until": "Blocked_until_com_instagram_android",
         "max_dur": 15,
-        "last_used": "Last_used_com.instagram.android",
-        "freq": "Freq_com.instagram.android",
+        "last_used": "Last_used_com_instagram_android",
+        "freq": "Freq_com_instagram_android",
         "max_freq": 10
     }],
-    "com.innogames.foeandroid": [{
-        "dur": "Dur_com.innogames.foeandroid",
-        "blocked_until": "Blocked_untilcom.innogames.foeandroid",
-        "max_dur": "0",
-        "last_used": "Last_used_com.innogames.foeandroid",
-        "freq": "Freq_com.innogames.foeandroid",
-        "max_freq": "0"
+    "com_innogames_foeandroid": [{
+        "dur": "Dur_com_innogames_foeandroid",
+        "blocked_until": "Blocked_until_com_innogames_foeandroid",
+        "max_dur": 20,
+        "last_used": "Last_used_com_innogames_foeandroid",
+        "freq": "Freq_com_innogames_foeandroid",
+        "max_freq": 10
     }],
-    "com.reddit.frontpage": [{
-        "dur": "Dur_com.reddit.frontpage",
-        "blocked_until": "Blocked_untilcom.reddit.frontpage",
+    "com_reddit_frontpage": [{
+        "dur": "Dur_com_reddit_frontpage",
+        "blocked_until": "Blocked_until_com_reddit_frontpage",
         "max_dur": 1200,
-        "last_used": "Last_used_com.reddit.frontpage",
-        "freq": "Freq_com.reddit.frontpage",
+        "last_used": "Last_used_com_reddit_frontpage",
+        "freq": "Freq_com_reddit_frontpage",
         "max_freq": 10
     }]
 }
