@@ -15,7 +15,6 @@ def basic_decorator(function):
 
     return wrapper
 
-
 def basic_decorator_with_arguments(*args):
 
     # do some pre decorator stuff
@@ -32,6 +31,7 @@ def basic_decorator_with_arguments(*args):
         return wrapper
 
     return actual_decorator
+
 
 def logger(function):
 
