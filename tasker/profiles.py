@@ -1,13 +1,13 @@
 def profile_disengage():
-    if time == 22 and wifi.connected():
+    if time == 22 and wifi_connected():
         disengage()
 
 def profile_wake_up():
-    if screen.off:
+    if screen_off():
         wake_up()
 
 def profile_engage():
-    if Disengage_until < time.time():
+    if Disengage_until < time_time():
         engage()
 
 
@@ -22,7 +22,7 @@ def profile_bad_app():
         max_dur: 1200,
         reset_time: max_dur * 3,
         max_freq: 10,
-        package: 'com.instagram.android',
+        package: 'com_instagram_android',
 
         dur: Instagram_dur,
         freq: Instagram_freq,
