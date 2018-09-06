@@ -1,15 +1,17 @@
+from functools import lru_cache
 import __init__
 from huys_python.templates.decorators import *
 
-def fibonacci(n):
+@lru_cache(100000)
+def fib_py(n):
     if n < 2:
         return n
-    return fibonacci(n-1) + fibonacci(n-2)
+    return fib_py(n-1) + fib_py(n-2)
 
-@timer_loop(3)
+
 def main():
-    for n in range(30):
-        fib = fibonacci(n)
-        print('{}: {}'.format(n, fib))
+    for n in range(100000):
+        fib_py(n)
+        # print('{}: {}'.format(n, fib))
 
 main()
