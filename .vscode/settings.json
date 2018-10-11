@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "X:\\Program Files\\Python\\Python37\\python.exe"
+    "python.pythonPath": "X:\\Program Files\\Python\\Python37\\python.exe",
+    "editor.fontFamily": "Consolas",
 }
