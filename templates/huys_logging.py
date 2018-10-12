@@ -49,7 +49,8 @@ class TlsSMTPHandler(logging.handlers.SMTPHandler):
 
 
 class Logging:
-    def __init__(self, name, level='error', filter_str='', create_file=False, send_email=False):
+    def __init__(self, name, level='error', filter_str='', 
+                 create_file=False, send_email=False):
 
         self.executer = futures.ThreadPoolExecutor(max_workers=2)
 

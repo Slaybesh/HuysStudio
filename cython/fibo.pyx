@@ -1,3 +1,6 @@
+# from functools import lru_cache
+
+# @lru_cache(5000)
 def fib(n):
     if n < 2:
         return n
@@ -16,7 +19,7 @@ cpdef fib_cpdef(int n):
     return fib_cpdef(n-2) + fib_cpdef(n-1)
 
 
-def fib_cdef(int n):
+cpdef fib_cdef(int n):
     return fib_in_c(n)
 
 cdef int fib_in_c(int n):
