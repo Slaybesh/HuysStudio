@@ -10,8 +10,6 @@ var obj = {
     c: 3
 };
 
-
-for (prop in obj) {
-    var prop = obj;
-    console.log(prop)
-}
+var input = 'asdf'
+var str = `uwjsjd ${input}`
+console.log(str)
