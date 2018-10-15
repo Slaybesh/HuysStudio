@@ -11,9 +11,8 @@ let str = JSON.stringify(ogdict);
 
 //str = global('Aaaa');
 let dict = JSON.parse(str);
-for 
-(key in dict) {
-   vvar evalstr = `var ${key} = '${dict[key]}';`
+for (key in dict) {
+    var evalstr = `var ${key} = '${dict[key]}';`
     //flash(evalstr);
     eval(evalstr);
 }
