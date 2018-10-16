@@ -6,7 +6,7 @@
 
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-async function loop() {
+async function async_loop() {
     let start_time = parseInt(global('TIMES'));
     while (true) {
         let new_time = parseInt(global('TIMES'));
@@ -14,4 +14,17 @@ async function loop() {
         await sleep(3000);
     }
 }
-loop();
+// loop();
+
+function test1(){
+    setTimeout(function(){console.log(2)}, 1000)
+}
+
+async function test2(){
+    await test1()
+    console.log(3)
+}
+
+test2()
+// test1()
+
