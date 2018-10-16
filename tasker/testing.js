@@ -7,9 +7,9 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 async function loop() {
-    for (i = 0; i < 6; i++) {
-        flash('test');
-        sleep(2000);
+    while (true) {
+        flash('');
+        sleep(3000);
     }
 
 }
