@@ -16,11 +16,19 @@ function task2(){
         resolve('task2 done');
     });
 }
-async function long_task(){
+async function async_long_task(){
     return new Promise(async function (resolve) {
         flash('beginning long task');
         await sleep(3000);
         flash('finishing long task');
+        resolve('long_task done');
+    });
+}
+
+function long_task(){
+    return new Promise(async function (resolve) {
+        flash('beginning long task');
+        setTimeout(function () {flash('finishing long task')}, 3000)
         resolve('long_task done');
     });
 }
@@ -130,7 +138,7 @@ function MakeQuerablePromise(promise) {
 
 function is_pending(promise) {
     // Don't modify any promise that has been already modified.
-    if (promise.isResolved) return promise;
+    if (promise.isPending) return promise;
 
     // Set initial state
     let isPending = true;
@@ -169,24 +177,26 @@ async function event_loop3(){
                 let fn = queue[i];
 
                 console.log('launching ' + fn)
-                let promise = eval(fn + '()');
+                // let promise = eval(fn + '()');
+                let promise = loop();
+                promise = is_pending(promise);
                 promise_list.push([fn, promise]);
                 // console.log('promise_list ' + promise_list)
 
             }
             
         } else {
-            let should_break = true;
-            let promise;
-            let pending;
-            for (i in promise_list) {
-                promise = is_pending(promise_list[i][1]);
-                pending = promise.isPending();
-                console.log('function: ' + promise_list[i][0], pending)
-                if (pending) {should_break = false}
+            for (i in [0,1,2,3]) {
             }
+            let should_break = true;
+            // for (i in promise_list) {
+            //     // let promise = promise_l ist[i][1];
+            //     // let pending = promise.isPending();
+            //     // console.log('function: ' + promise_list[i][0], pending);
+            //     // if (pending) {should_break = false}
+            // }
             
-            if (should_break) {break}
+            // if (should_break) {break}
         }
         await sleep(200);
     }
@@ -199,7 +209,6 @@ async function promise_test() {
     let promise = loop();
     
     promise = is_pending(promise);
-
     let t0 = performance.now();
     while (true){
         let pending = promise.isPending();
@@ -208,7 +217,6 @@ async function promise_test() {
         if (!pending) {
             console.log('breaking');
             // console.log(promise.isResolved);
-            console.log(promise);
             console.log('time taken: ' + (performance.now() - t0));
             break;
         }
@@ -216,5 +224,4 @@ async function promise_test() {
     }
 }
 
-
-event_loop3()
+promise_test()
