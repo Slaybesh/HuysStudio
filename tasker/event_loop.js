@@ -1,10 +1,10 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-function flash(msg) {console.log(msg)}
-function exit(){console.log('exit()')}
-function global(a1){if(a1=='SDK'||a1=='%SDK'){return '0';}else{return ' ';}}
-function setGlobal(a1,a2){}
-function writeFile(a1,a2,a3){return true;}
+// function flash(msg) {console.log(msg)}
+// function exit(){console.log('exit()')}
+// function global(a1){if(a1=='SDK'||a1=='%SDK'){return '0';}else{return ' ';}}
+// function setGlobal(a1,a2){}
+// function writeFile(a1,a2,a3){return true;}
 
 
 //#region functions
