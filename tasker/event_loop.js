@@ -26,7 +26,6 @@ async function example_async_loop(){
             flash('while loop: ' + elapsed);
             await sleep(3000);
             if (elapsed > 3) {
-                flash('elapsed time: ' + elapsed)
                 break
             }
 
@@ -40,7 +39,6 @@ async function example_async_loop(){
 async function event_loop(){
     setGlobal('JS_running', 'true')
     let debugging = (global('Debugging') === 'true');
-    debugging = true;
     
     // if (debugging) {flash()}
     let promise_list = []; // running fns
