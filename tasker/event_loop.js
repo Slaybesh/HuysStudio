@@ -1,17 +1,21 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
+function flash(msg) {console.log(msg)}
+function exit(){console.log('exit()')}
+function global(a1){if(a1=='SDK'||a1=='%SDK'){return '0';}else{return ' ';}}
+function setGlobal(a1,a2){}
+function writeFile(a1,a2,a3){return true;}
+
 
 //#region functions
-async function example_task(){
+function example_task(){
     return new Promise(resolve => {
-        flash('start example_task');
-        await sleep(1000)
-        flash('end example_task');
+        flash('example_task');
         resolve('example_task done');
     });
 }
 
-async function example_loop(){
+async function example_async_loop(){
     return new Promise(async function (resolve) {
         let t0 = performance.now()
         while (true){
