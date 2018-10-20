@@ -1,2 +1,2 @@
-let ret = performTask('Some Task');
-flash(ret)
+performTask('Some Task');
+flash(test_var)
