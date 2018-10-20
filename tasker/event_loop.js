@@ -1,9 +1,11 @@
+const { performance } = require('perf_hooks');
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
+// let test_queue = 'example_task,example_async_loop'
 // function flash(msg) {console.log(msg)}
 // function exit(){console.log('exit()')}
-// function global(a1){if(a1=='SDK'||a1=='%SDK'){return '0';}else{return ' ';}}
-// function setGlobal(a1,a2){}
+// function global(a1){return test_queue}
+// function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
 // function writeFile(a1,a2,a3){return true;}
 
 
@@ -35,20 +37,25 @@ async function example_async_loop(){
 async function event_loop(){
     setGlobal('JS_running', 'true')
     let debugging = (global('Debugging') === 'true');
-    if (debugging) {flash()}
+    debugging = true;
+    
+    // if (debugging) {flash()}
     let promise_list = []; // running fns
     let once = true;
         
     while (true) {
         let queue_str = global('JS_queue');
         setGlobal('JS_queue', '');
-        if (debugging) {flash('Queue String: ' + queue_str)}
-
+        
         if (queue_str) {
             let queue = queue_str.split(',');
+
+            if (debugging) {flash('Queue String: ' + queue_str + '\nQueue length: ' + queue.length)}
+
             promise_list = launch_functions(queue, promise_list);
             
         } else { 
+            // if (debugging) {flash(promise_list)}
             let should_break = check_running(promise_list);
             if (should_break) {break}
         }
@@ -102,7 +109,7 @@ function extendPromise(promise) {
 function check_running(promise_list) {
     let should_break = true;
     for (i in promise_list) {
-        let promise = promise_list[i][1];
+        let promise = promise_list[i];
         let pending = promise.isPending();
         // console.log('function: ' + promise_list[i][0], pending);
         if (pending) {should_break = false}
