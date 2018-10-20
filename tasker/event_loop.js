@@ -1,6 +1,6 @@
-const { performance } = require('perf_hooks');
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
+// const { performance } = require('perf_hooks');
 // let test_queue = 'example_task,example_async_loop'
 // function flash(msg) {console.log(msg)}
 // function exit(){console.log('exit()')}
@@ -23,9 +23,12 @@ async function example_async_loop(){
         while (true){
             
             let elapsed = parseInt(performance.now() - t0) / 1000;
-            console.log('while loop: ' + elapsed);
-            await sleep(1000);
-            if (elapsed > 3) {break}
+            flash('while loop: ' + elapsed);
+            await sleep(3000);
+            if (elapsed > 3) {
+                flash('elapsed time: ' + elapsed)
+                break
+            }
 
         }
         resolve('while loop done');
