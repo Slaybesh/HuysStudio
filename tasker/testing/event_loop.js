@@ -16,7 +16,7 @@ function task2(){
         resolve('task2 done');
     });
 }
-async function long_task(){
+async function async_long_task(){
     return new Promise(async function (resolve) {
         flash('beginning long task');
         await sleep(3000);
@@ -25,13 +25,37 @@ async function long_task(){
     });
 }
 
-async function loop(){
+function long_task(){
     return new Promise(async function (resolve) {
-        for (i=0; i<3; i++){
-            flash('loop ' + i);
-            await sleep(1000);
+        flash('beginning long task');
+        setTimeout(function () {flash('finishing long task')}, 3000)
+        resolve('long_task done');
+    });
+}
+
+async function for_loop_task(){
+    return new Promise(async function (resolve) {
+        console.log('start for_loop_task');
+        for (i=0; i<4; i++){
+            console.log('for loop: ' + i);
+            await sleep(500);
         }
-        resolve('loop done');
+        resolve('for loop done');
+    });
+}
+
+async function while_loop_task(){
+    return new Promise(async function (resolve) {
+        let t0 = performance.now()
+        while (true){
+            
+            let elapsed = parseInt(performance.now() - t0) / 1000;
+            console.log('while loop: ' + elapsed);
+            await sleep(1000);
+            if (elapsed > 3) {break}
+
+        }
+        resolve('while loop done');
     });
 }
 
@@ -39,64 +63,6 @@ async function loop(){
 // Promise.all(fn).then((message) => console.log(message));
 // flash(fn)
 
-async function event_loop1(){
-    // setGlobal('JS_running', 'true')
-    let queue_str = 'task1,long_task,loop'
-    while (true) {
-
-        // let queue_str = global('JS_queue')
-        if (queue_str) {
-            // let queue = global('JS_queue').split(',')
-            let queue = queue_str.split(',')
-            let fn = queue.pop()
-            queue_str = queue.toString()
-            // setGlobal('JS_queue', queue.toString())
-            // flash(fn)
-            const ret = eval(fn + '()');
-            // await ret
-        } else {
-            break;
-        }
-    }
-    // setGlobal('JS_running', 'false')
-    exit();
-}
-
-async function event_loop2(){
-    // setGlobal('JS_running', 'true')
-    let queue_str = 'task1,long_task,loop'
-        
-    // let queue_str = global('JS_queue')
-    if (queue_str) {
-        // let queue = global('JS_queue').split(',')
-        // setGlobal('JS_queue', '')
-        let queue = queue_str.split(',')
-        let fn_list = []
-        for (key in queue) {
-            
-            let fn = queue[key]
-            // flash(fn)
-            fn_list.push(eval(fn + '()'))
-        }
-        for (key in fn_list) {
-            await fn_list[key]
-        }
-        // queue_str = queue.toString()
-        // flash(fn)
-        // await ret
-    }
-    // setGlobal('JS_running', 'false')
-    exit();
-}
-// flash(fn_name)
-
-async function fn_running(fn_list) {
-    Promise.all(fn_list);
-
-    // for (key in fn_list) {
-    //     await fn_list[key]
-    // }
-}
 
 function MakeQuerablePromise(promise) {
     // Don't modify any promise that has been already modified.
@@ -128,9 +94,9 @@ function MakeQuerablePromise(promise) {
 }
 
 
-function is_pending(promise) {
+function isPending(promise) {
     // Don't modify any promise that has been already modified.
-    if (promise.isResolved) return promise;
+    if (promise.isPending) return promise;
 
     // Set initial state
     let isPending = true;
@@ -151,11 +117,23 @@ function is_pending(promise) {
     return result;
 }
 
-async function event_loop3(){
+function check_running(promise_list) {
+    let should_break = true;
+    for (i in promise_list) {
+        let promise = promise_list[i][1];
+        let pending = promise.isPending();
+        // console.log('function: ' + promise_list[i][0], pending);
+        if (pending) {should_break = false}
+    }
+    return should_break
+}
+
+async function event_loop(){
     // setGlobal('JS_running', 'true')
-    // let queue_str = 'task1,long_task,loop';
-    let queue_str = 'loop';
+    let queue_str = 'task1,long_task,while_loop_task';
+    // let queue_str = 'while_loop_task';
     let promise_list = []; // running fns
+    let once = true;
         
     while (true) {
         // let queue_str = global('JS_queue')
@@ -168,24 +146,27 @@ async function event_loop3(){
             for (i in queue) {
                 let fn = queue[i];
 
-                console.log('launching ' + fn)
-                let promise = eval(fn + '()');
-                promise_list.push([fn, promise]);
+                // console.log('launching ' + fn)
+                try {
+                    let promise = eval(fn + '()');
+    
+                    promise = isPending(promise);
+                    promise_list.push([fn, promise]);
+
+                } catch(error) {
+
+                }
                 // console.log('promise_list ' + promise_list)
 
             }
             
-        } else {
-            let should_break = true;
-            let promise;
-            let pending;
-            for (i in promise_list) {
-                promise = is_pending(promise_list[i][1]);
-                pending = promise.isPending();
-                console.log('function: ' + promise_list[i][0], pending)
-                if (pending) {should_break = false}
+        } else { 
+            let should_break = check_running(promise_list);
+            if (once) {
+                queue_str = 'task2,while_loop_task,long_task';
+                once = false;
             }
-            
+            // console.log('should_break: ', should_break)
             if (should_break) {break}
         }
         await sleep(200);
@@ -194,12 +175,35 @@ async function event_loop3(){
     exit();
 }
 
+async function for_loop() {
+    let t0 = performance.now();
+    let promise_list = [];
+
+    let promise = while_loop_task()
+    promise = isPending(promise)
+    promise_list.push(promise);
+
+    whileloop:
+    while (true) {
+        for (i in promise_list) {
+            let promise = promise_list[i];
+            promise.then((value) => {console.log(value)});
+
+            if (!promise.isPending()) {
+                console.log(promise.isPending());
+                let t1 = performance.now();
+                console.log('time taken: ' + parseInt(t1 - t0));
+                break whileloop;
+            }
+        }
+        await sleep(1000)
+    }
+}
 
 async function promise_test() {
     let promise = loop();
     
     promise = is_pending(promise);
-
     let t0 = performance.now();
     while (true){
         let pending = promise.isPending();
@@ -208,8 +212,7 @@ async function promise_test() {
         if (!pending) {
             console.log('breaking');
             // console.log(promise.isResolved);
-            console.log(promise);
-            console.log('time taken: ' + (performance.now() - t0));
+            console.log('time taken: ' + parseInt(performance.now() - t0));
             break;
         }
         await sleep(200)
@@ -217,4 +220,5 @@ async function promise_test() {
 }
 
 
-event_loop3()
+
+event_loop()
