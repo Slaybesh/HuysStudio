@@ -25,9 +25,7 @@ async function example_async_loop(){
             let elapsed = parseInt(performance.now() - t0) / 1000;
             flash('while loop: ' + elapsed);
             await sleep(3000);
-            if (elapsed > 3) {
-                break
-            }
+            if (elapsed > 9) {break}
 
         }
         resolve('while loop done');
