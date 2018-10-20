@@ -29,9 +29,10 @@ function remove_notifications() {
             snooze_time = (Snooze_time + 5 - TIMES) * 1000;
         }
 
-        let packages = global('All_notification_packages')
+        let packages = global('All_notification_packages').split(',');
         for (const i in packages) {
-            flash(packages[i]);
+            let app = packages[i]
+            flash(app);
         }
             
     }

@@ -36,7 +36,7 @@ async function example_async_loop(){
 
 async function event_loop(){
     setGlobal('JS_running', 'true')
-    let debugging = (global('Debugging') === 'true');
+    debugging = (global('Debugging') === 'true');
     
     // if (debugging) {flash()}
     let promise_list = []; // running fns
