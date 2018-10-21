@@ -1,12 +1,12 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-const { performance } = require('perf_hooks');
-let test_queue = 'example_task,example_async_loop'
-function flash(msg) {console.log(msg)}
-function exit(){console.log('exit()')}
-function global(a1){return test_queue}
-function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
-function writeFile(a1,a2,a3){return true;}
+// const { performance } = require('perf_hooks');
+// let test_queue = 'example_task,example_async_loop'
+// function flash(msg) {console.log(msg)}
+// function exit(){console.log('exit()')}
+// function global(a1){return test_queue}
+// function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
+// function writeFile(a1,a2,a3){return true;}
 
 
 //#region functions
