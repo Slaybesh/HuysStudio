@@ -1,12 +1,15 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-// const { performance } = require('perf_hooks');
-// let test_queue = 'example_task,example_async_loop'
-// function flash(msg) {console.log(msg)}
-// function exit(){console.log('exit()')}
-// function global(a1){return test_queue}
-// function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
-// function writeFile(a1,a2,a3){return true;}
+const { performance } = require('perf_hooks');
+let test_queue = ',example_async_loop'
+function flash(msg) {console.log(msg)}
+function exit(){console.log('exit()')}
+function global(a1){return test_queue}
+function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
+function writeFile(a1,a2,a3){return true;}
+function performTask(a1,a2,a3,a4){return true;}
+function enableProfile(a1,a2){return true;}
+debugging = true;
 
 
 //#region functions
@@ -35,12 +38,14 @@ async function pomodoro() {
     enableProfile('Engage', true);
     
     while (Disengaged_until > TIMES) {
+        TIMES = parseInt(global('TIMES'));
+
         let time_left_min = Math.floor((Disengaged_until - TIMES) / 60);
         let time_left_sec = (Disengaged_until - TIMES) % 60;
         time_left_min = pad(String(time_left_min), 2);
         time_left_sec = pad(String(time_left_sec), 2);
 
-        performTask('create_notification', priority, 
+        performTask('create_notification', 5, 
                     `Pomodoro Session|${time_left_min}:${time_left_sec}|mw_image_timer|3`)
         await sleep(500);
     }
@@ -99,12 +104,12 @@ function remove_notifications() {
         }
     }
 }
-//#endregion functions
+//#endregion #### functions ####
 
 
 async function event_loop(){
-    setGlobal('JS_running', 'true')
-    debugging = (global('Debugging') === 'true');
+    setGlobal('JS_running', 'true');
+    // debugging = (global('Debugging') === 'true');
     
     // if (debugging) {flash()}
     let promise_list = []; // running fns
@@ -134,20 +139,21 @@ async function event_loop(){
 }
 
 
-//#region helpers
+//#region #### helpers ####
 function launch_functions(queue, promise_list) {
     for (i in queue) {
         let fn = queue[i];
+        if (fn) {
+            try {
+                let promise = eval(fn + '()');
 
-        // console.log('launching ' + fn)
-        try {
-            let promise = eval(fn + '()');
+                promise = extend_promise(promise);
+                promise_list.push(promise);
 
-            promise = extend_promise(promise);
-            promise_list.push(promise);
-
-        } catch(error) {
-            writeFile('Tasker/log/launch_functions_error.txt', error + '\n')
+            } catch(error) {
+                console.log(error)
+                writeFile('Tasker/log/launch_functions_error.txt', fn + '\n' + error + '\n\n')
+            }
         }
     }
     return promise_list
