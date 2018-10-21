@@ -45,9 +45,11 @@ async function pomodoro() {
         time_left_min = pad(String(time_left_min), 2);
         time_left_sec = pad(String(time_left_sec), 2);
 
-        performTask('create_notification', 5, 
-                    `Pomodoro Session|${time_left_min}:${time_left_sec}|mw_image_timer|3`)
-        await sleep(500);
+        flash(time_left_min + ':' + time_left_sec);
+
+        performTask('create_notification', 5,
+                    `Pomodoro Session|${time_left_min}:${time_left_sec}|mw_image_timer|3`);
+        await sleep(2000);
     }
 }
 
