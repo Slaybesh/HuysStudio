@@ -31,25 +31,30 @@ async function example_async_loop(){
     return 'while loop done'
 }
 async function pomodoro() {
-    disengage();
-    let TIMES = parseInt(global('TIMES'));
-    let Disengaged_until = TIMES + 1200
-    setGlobal('Disengaged_until', Disengaged_until);
-    enableProfile('Engage', true);
-    
-    while (Disengaged_until > TIMES) {
-        TIMES = parseInt(global('TIMES'));
+    try {
+        disengage();
+        let TIMES = parseInt(global('TIMES'));
+        let Disengaged_until = TIMES + 1200
+        setGlobal('Disengaged_until', Disengaged_until);
+        enableProfile('Engage', true);
+        
+        while (Disengaged_until > TIMES) {
+            TIMES = parseInt(global('TIMES'));
 
-        let time_left_min = Math.floor((Disengaged_until - TIMES) / 60);
-        let time_left_sec = (Disengaged_until - TIMES) % 60;
-        time_left_min = pad(String(time_left_min), 2);
-        time_left_sec = pad(String(time_left_sec), 2);
+            let time_left_min = Math.floor((Disengaged_until - TIMES) / 60);
+            let time_left_sec = (Disengaged_until - TIMES) % 60;
+            time_left_min = pad(String(time_left_min), 2);
+            time_left_sec = pad(String(time_left_sec), 2);
 
-        flash(time_left_min + ':' + time_left_sec);
+            flash(time_left_min + ':' + time_left_sec);
 
-        performTask('create_notification', 5,
-                    `Pomodoro Session|${time_left_min}:${time_left_sec}|mw_image_timer|3`);
-        await sleep(2000);
+            performTask('create_notification', 5,
+                        `Pomodoro Session|${time_left_min}:${time_left_sec}|mw_image_timer|3`);
+            await sleep(2000);
+        }
+    } catch(error) {
+        flashLong('pomodoro error')
+        writeFile('Tasker/log/pomodoro.txt', error + '\n\n', true)
     }
 }
 
@@ -154,7 +159,7 @@ function launch_functions(queue, promise_list) {
 
             } catch(error) {
                 flashLong('launch_functions error')
-                writeFile('Tasker/log/launch_functions_error.txt', fn + '\n' + error + '\n\n')
+                writeFile('Tasker/log/launch_functions_error.txt', fn + '\n' + error + '\n\n', true)
             }
         }
     }
