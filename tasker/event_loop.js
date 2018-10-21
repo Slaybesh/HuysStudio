@@ -1,7 +1,7 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 // const { performance } = require('perf_hooks');
-// let test_queue = ',example_async_loop'
+// let test_queue = 'pomodoro'
 // function flash(msg) {console.log(msg)}
 // function exit(){console.log('exit()')}
 // function global(a1){return test_queue}
@@ -33,6 +33,8 @@ async function example_async_loop(){
 async function pomodoro() {
     try {
         disengage();
+        // let TIMES = 0
+        // let Disengaged_until = 200
         let TIMES = parseInt(global('TIMES'));
         let Disengaged_until = TIMES + 1200
         setGlobal('Disengaged_until', Disengaged_until);
@@ -40,6 +42,7 @@ async function pomodoro() {
         
         while (Disengaged_until > TIMES) {
             TIMES = parseInt(global('TIMES'));
+            // TIMES++
 
             let time_left_min = Math.floor((Disengaged_until - TIMES) / 60);
             let time_left_sec = (Disengaged_until - TIMES) % 60;
