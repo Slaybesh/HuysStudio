@@ -1,15 +1,15 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-const { performance } = require('perf_hooks');
-let test_queue = ',example_async_loop'
-function flash(msg) {console.log(msg)}
-function exit(){console.log('exit()')}
-function global(a1){return test_queue}
-function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
-function writeFile(a1,a2,a3){return true;}
-function performTask(a1,a2,a3,a4){return true;}
-function enableProfile(a1,a2){return true;}
-debugging = true;
+// const { performance } = require('perf_hooks');
+// let test_queue = ',example_async_loop'
+// function flash(msg) {console.log(msg)}
+// function exit(){console.log('exit()')}
+// function global(a1){return test_queue}
+// function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
+// function writeFile(a1,a2,a3){return true;}
+// function performTask(a1,a2,a3,a4){return true;}
+// function enableProfile(a1,a2){return true;}
+// debugging = true;
 
 
 //#region functions
@@ -109,7 +109,7 @@ function remove_notifications() {
 
 async function event_loop(){
     setGlobal('JS_running', 'true');
-    // debugging = (global('Debugging') === 'true');
+    debugging = (global('Debugging') === 'true');
     
     // if (debugging) {flash()}
     let promise_list = []; // running fns
@@ -151,7 +151,7 @@ function launch_functions(queue, promise_list) {
                 promise_list.push(promise);
 
             } catch(error) {
-                console.log(error)
+                flashLong('launch_functions error')
                 writeFile('Tasker/log/launch_functions_error.txt', fn + '\n' + error + '\n\n')
             }
         }
