@@ -4,13 +4,13 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 function flash(msg) {console.log(msg)}
 function exit(){console.log('exit()')}
 
-function task1(){
+async function task1(){
     return new Promise(resolve => {
         flash('task1');
         resolve('task1 done');
     });
 }
-function task2(){
+async function task2(){
     return new Promise(resolve => {
         flash('task2');
         resolve('task2 done');
@@ -25,7 +25,7 @@ async function async_long_task(){
     });
 }
 
-function long_task(){
+async function long_task(){
     return new Promise(async function (resolve) {
         flash('beginning long task');
         setTimeout(function () {flash('finishing long task')}, 3000)

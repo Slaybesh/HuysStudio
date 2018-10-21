@@ -13,8 +13,8 @@ var priority = par1.priority;
 flash(title)
 
 
-var snooze_time;
 function remove_notifications() {
+    var snooze_time;
     let Snooze_time = parseInt(global('Snooze_time'));
     let TIMES = parseInt(global('TIMES'));
     let Disengaged_until = parseInt(global('Disengaged_until'));
@@ -31,17 +31,18 @@ function remove_notifications() {
 
         let packages = global('All_notification_packages').split(',');
         for (const i in packages) {
-            let app = packages[i]
-            flash(app);
+            let app = packages[i];
+            performTask('remove_notification', priority, app, snooze_time);
         }
-            
+    } else if (!Disengaged) {
+        let Blocked_apps = global('Blocked_apps');
+        let Blocked_times = global('Blocked_times')
+        for (i in Blocked_apps) {
+            if (Blocked_times[i] > TIMES) {
+                let app = Blocked_apps[i];
+                performTask('remove_notification', priority, app, snooze_time)
+            }
+        }
     }
 }
 
-function flash(input) {console.log(input)}
-
-var arr = [0,1,2,3]
-flash(arr)
-for (const i in arr) {
-    flash(arr[i]);
-}

@@ -7,7 +7,7 @@ function get_vars(vars_str) {
     let aiapp = 'asdf';
 
     let package = aipackage.replace(/\./g, '_');
-    package = package.charAt(0).toUpperCase() + package.slice(1);
+    let package = package.charAt(0).toUpperCase() + package.slice(1);
 
     // let app_info_str = global(package);
     let app_info_str;
