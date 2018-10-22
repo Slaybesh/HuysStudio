@@ -30,6 +30,7 @@ async function example_async_loop(){
     }
     return 'while loop done'
 }
+
 async function pomodoro() {
     try {
         disengage();
@@ -82,7 +83,7 @@ async function engage() {
 }
 //#endregion
 
-function remove_notifications() {
+async function remove_notifications() {
     var snooze_time;
     let Snooze_time = parseInt(global('Snooze_time'));
     let TIMES = parseInt(global('TIMES'));
@@ -207,6 +208,10 @@ function check_running(promise_list) {
         if (pending) {should_break = false}
     }
     return should_break
+}
+
+async function exiting() {
+    exit();
 }
 
 function pad(n, padding) {
