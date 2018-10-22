@@ -1,12 +1,13 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 // const { performance } = require('perf_hooks');
-// let test_queue = 'example_async_loop'
+// let test_queue = 'wait,wait_async'
 // function flash(msg) {console.log(msg)}
+// function flashLong(msg) {console.log(msg)}
 // function exit(){console.log('exit()')}
 // function global(a1){return test_queue}
 // function setGlobal(a1,a2){if (a1 == 'JS_queue') {test_queue = ''}}
-// function writeFile(a1,a2,a3){return true;}
+// function writeFile(a1,a2,a3){console.log(a2);}
 // function performTask(a1,a2,a3,a4){return true;}
 // function enableProfile(a1,a2){return true;}
 // debugging = true;
@@ -50,6 +51,17 @@ async function remove_notifications() {
 //#endregion
 
 //#region Testing
+function wait() {
+    return new Promise(resolve => {
+        sleep(10000).then(() => {flash('synced'); resolve()})
+    });
+}
+
+async function wait_async() {
+    await sleep(10000)
+    flash('async')
+}
+
 async function example_task(){
     flash('example_task');
     return 'example_task done'
