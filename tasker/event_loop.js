@@ -11,8 +11,45 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 // function enableProfile(a1,a2){return true;}
 // debugging = true;
 
+/* ################ Functions ################ */
+//#region Functions
 
-//#region functions
+//#region Notifications
+async function remove_notifications() {
+    var snooze_time;
+    let Snooze_time = parseInt(global('Snooze_time'));
+    let TIMES = parseInt(global('TIMES'));
+    let Disengaged_until = parseInt(global('Disengaged_until'));
+    let Disengaged = (global('Disengaged') === 'true');
+
+    if (Disengaged || Snooze_time > TIMES) {
+        if (Disengaged_until > TIMES) {
+            snooze_time = (Disengaged_until + 60 - TIMES) * 1000;
+        } else if (Disengaged) {
+            snooze_time = 1800 * 1000;
+        } else {
+            snooze_time = (Snooze_time + 5 - TIMES) * 1000;
+        }
+
+        let packages = global('All_notification_packages').split(',');
+        for (const i in packages) {
+            let app = packages[i];
+            performTask('remove_notification', priority, app, snooze_time);
+        }
+    } else if (!Disengaged) {
+        let Blocked_apps = global('Blocked_apps');
+        let Blocked_times = global('Blocked_times')
+        for (i in Blocked_apps) {
+            if (Blocked_times[i] > TIMES) {
+                let app = Blocked_apps[i];
+                performTask('remove_notification', priority, app, snooze_time)
+            }
+        }
+    }
+}
+//#endregion
+
+//#region Testing
 async function example_task(){
     flash('example_task');
     return 'example_task done'
@@ -40,8 +77,8 @@ async function timer () {
         i++;
         await sleep(1000);
     }
-    exit();
 }
+//#endregion Testing
 
 async function pomodoro() {
     try {
@@ -95,41 +132,9 @@ async function engage() {
 }
 //#endregion
 
-async function remove_notifications() {
-    var snooze_time;
-    let Snooze_time = parseInt(global('Snooze_time'));
-    let TIMES = parseInt(global('TIMES'));
-    let Disengaged_until = parseInt(global('Disengaged_until'));
-    let Disengaged = (global('Disengaged') === 'true');
-
-    if (Disengaged || Snooze_time > TIMES) {
-        if (Disengaged_until > TIMES) {
-            snooze_time = (Disengaged_until + 60 - TIMES) * 1000;
-        } else if (Disengaged) {
-            snooze_time = 1800 * 1000;
-        } else {
-            snooze_time = (Snooze_time + 5 - TIMES) * 1000;
-        }
-
-        let packages = global('All_notification_packages').split(',');
-        for (const i in packages) {
-            let app = packages[i];
-            performTask('remove_notification', priority, app, snooze_time);
-        }
-    } else if (!Disengaged) {
-        let Blocked_apps = global('Blocked_apps');
-        let Blocked_times = global('Blocked_times')
-        for (i in Blocked_apps) {
-            if (Blocked_times[i] > TIMES) {
-                let app = Blocked_apps[i];
-                performTask('remove_notification', priority, app, snooze_time)
-            }
-        }
-    }
-}
 //#endregion #### functions ####
 
-
+/* ################ Event Loop ################ */
 async function event_loop(){
     setGlobal('JS_running', 'true');
     debugging = (global('Debugging') === 'true');
@@ -160,7 +165,17 @@ async function event_loop(){
 }
 
 
-//#region #### helpers ####
+/* ################ Helpers ################ */
+//#region
+async function launch_task(task_name) {
+    // if (debugging) {flash('Starting: ' + task_name)}
+    
+    performTask(task_name);
+    while (global('TRUN').includes(task_name)) {await sleep(100)}
+
+    if (debugging) {flash('Finished: ' + task_name)}
+}
+
 function launch_functions(queue, promise_list) {
     for (i in queue) {
         let fn = queue[i];
@@ -178,15 +193,6 @@ function launch_functions(queue, promise_list) {
         }
     }
     return promise_list
-}
-
-async function launch_task(task_name) {
-    if (debugging) {flash('Starting: ' + task_name)}
-    
-    performTask(task_name);
-    while (global('TRUN').includes(task_name)) {await sleep(100)}
-
-    if (debugging) {flash('Finished: ' + task_name)}
 }
 
 function extend_promise(promise) {
@@ -208,7 +214,6 @@ function extend_promise(promise) {
     result.is_pending = function() { return is_pending; };
     return result;
 }
-
 function check_running(promise_list) {
     let should_break = true;
     for (i in promise_list) {
@@ -219,18 +224,16 @@ function check_running(promise_list) {
     }
     return should_break
 }
-
 async function exiting() {
     if (debugging) {flash('Exiting Event Loop.')}
     setGlobal('JS_running', 'false');
     exit();
 }
-
 function pad(n, padding) {
     n = String(n);
     return n.length >= padding ? n : new Array(padding - n.length + 1).join('0') + n;
 };
-//#endregion helpers
+//#endregion
 
 
 event_loop()
