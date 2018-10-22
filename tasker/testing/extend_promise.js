@@ -1,15 +1,7 @@
 const { performance } = require('perf_hooks');
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-async function promise_async_long_task(){
-    return new Promise(async (resolve, reject) => {
-        console.log('beginning long task');
-        await sleep(1000);
-        console.log('finishing long task');
-        // resolve('long_task resolved');
-        reject('long_task rejected');
-    });
-}
+
 async function async_long_task(){
     console.log('beginning long task');
     await sleep(1000);

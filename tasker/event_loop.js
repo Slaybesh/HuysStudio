@@ -1,7 +1,7 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 // const { performance } = require('perf_hooks');
-// let test_queue = 'pomodoro'
+// let test_queue = 'example_async_loop'
 // function flash(msg) {console.log(msg)}
 // function exit(){console.log('exit()')}
 // function global(a1){return test_queue}
@@ -49,10 +49,10 @@ async function pomodoro() {
             time_left_min = pad(String(time_left_min), 2);
             time_left_sec = pad(String(time_left_sec), 2);
 
-            flash(time_left_min + ':' + time_left_sec);
+            // flash(time_left_min + ':' + time_left_sec);
 
             performTask('create_notification', 5,
-                        `Pomodoro Session|${time_left_min}:${time_left_sec}|mw_image_timer|3`);
+                        `Pomodoro Session|${time_left_min}:${time_left_sec} remaining|mw_image_timer|3`);
             await sleep(2000);
         }
     } catch(error) {
