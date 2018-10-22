@@ -1,4 +1,14 @@
-let time_left_min = 10;
-let time_left_sec = 12;
-performTask('create_notification', 5,
-            `Pomodoro Session|${time_left_min}:${time_left_sec}|mw_image_timer|3`);
+function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
+
+async function timer () {
+    let i = 0;
+    while (i < 10) {
+    
+        performTask('create_notification', 5,
+                    `Timer|${i}|mw_image_timer|3`);
+        i++;
+        await sleep(2000);
+    }
+    exit();
+}
+timer();
