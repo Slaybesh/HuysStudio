@@ -7,7 +7,7 @@ async function timer () {
         performTask('create_notification', 5,
                     `Timer|${i}|mw_image_timer|3`);
         i++;
-        await sleep(2000);
+        await sleep(1000);
     }
     exit();
 }
