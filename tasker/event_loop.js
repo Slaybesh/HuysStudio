@@ -143,10 +143,8 @@ async function event_loop(){
             if (should_break) {break}
         }
         await sleep(200);
-    }
-    setGlobal('JS_running', 'false');
-    if (debugging) {flash('Exiting Event Loop.')}
-    exit();
+    }    
+    exiting();
 }
 
 
@@ -211,6 +209,8 @@ function check_running(promise_list) {
 }
 
 async function exiting() {
+    if (debugging) {flash('Exiting Event Loop.')}
+    setGlobal('JS_running', 'false');
     exit();
 }
 
