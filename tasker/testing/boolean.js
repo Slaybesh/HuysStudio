@@ -1,8 +1,6 @@
-let arr = []
-let full = ['text']
-console.log(arr.length)
+let num = '0'
 
-if (arr.length != 0) {
+if (parseInt(num)) {
     console.log('full')
 } else {
     console.log('empty')
