@@ -12,11 +12,15 @@ async function timer () {
     exit();
 }
 
-create(text)
+create()
 
-async function create(text) {
+async function create() {
     // var text;
-    await performTask('create_notification', 5, `Timer|${text}|mw_image_timer|3`);
+    performTask('create_notification', 5, `Timer|0|mw_image_timer|3`);
+    await sleep(1000)
+    performTask('create_notification', 5, `Timer|1|mw_image_timer|3`);
+    await sleep(1000)
+    performTask('create_notification', 5, `Timer|2|mw_image_timer|3`);
 }
 
 // async function launch_task(task_name, priority=5, par1='', par2='') {
