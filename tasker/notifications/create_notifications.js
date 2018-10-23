@@ -4,9 +4,10 @@ async function timer () {
     let i = 0;
     while (i < 10) {
     
-        launch_task('create_notification', 5,
+        performTask('create_notification', 5,
                     `Timer|${i}|mw_image_timer|3`);
         i++;
+        flash(i);
         await sleep(1000);
     }
     exit();
