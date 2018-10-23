@@ -11,10 +11,11 @@ async function timer () {
     }
     exit();
 }
-create()
 
-function create() {
-    var text;
+create(text)
+
+function create(text) {
+    // var text;
     performTask('create_notification', 5, `Timer|${text}|mw_image_timer|3`);
 }
 
