@@ -21,6 +21,7 @@ async function create() {
     performTask('create_notification', 5, `Timer|1|mw_image_timer|3`);
     await sleep(1000)
     performTask('create_notification', 5, `Timer|2|mw_image_timer|3`);
+    exit();
 }
 
 // async function launch_task(task_name, priority=5, par1='', par2='') {
