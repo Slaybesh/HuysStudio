@@ -10,7 +10,7 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 // function writeFile(a1,a2,a3){console.log(a2);}
 // function performTask(a1,a2,a3,a4){return true;}
 // function enableProfile(a1,a2){return true;}
-// debugging = true;
+// debugging = 1;
 
 /* ################ Functions ################ */
 //#region Functions
@@ -149,7 +149,7 @@ async function engage() {
 /* ################ Event Loop ################ */
 async function event_loop(){
     setGlobal('JS_running', 'true');
-    debugging = (global('Debugging') === 'true');
+    debugging = parseInt(global('Debugging'));
     
     // if (debugging) {flash()}
     let promise_list = []; // running fns
