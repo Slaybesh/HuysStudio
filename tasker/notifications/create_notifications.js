@@ -9,6 +9,7 @@ async function timer () {
         i++;
         await sleep(1000);
     }
+    exit();
 }
 timer()
 
