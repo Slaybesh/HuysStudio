@@ -1,4 +1,4 @@
-async function disengage() {
+function disengage() {
     if (global('Indoor') == 1) {
         setGlobal('Disengaged', true);
         performTask('Remove Notifications');
@@ -8,11 +8,4 @@ async function disengage() {
         // mobileData(false);
     }
 }
-async function engage() {
-    setGlobal('Disengaged', false);
-    enableProfile('Engage', false);
-    shell('settings put secure accessibility_display_daltonizer_enabled 0', true);
-    performTask('regular_checks')
-    // setWifi(true);
-    // mobileData(true);
-}
+disengage()

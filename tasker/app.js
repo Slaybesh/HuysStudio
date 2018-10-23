@@ -1,3 +1,5 @@
+function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
+
 function get_vars(vars_str) {
     let vars = JSON.parse(vars_str);
     // let auto_input = performTask('get_current_package');
@@ -42,8 +44,6 @@ function app_start() {
 
 }
 
-
-function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 async function app_blocker() {
     performTask('regular_checks');
 
