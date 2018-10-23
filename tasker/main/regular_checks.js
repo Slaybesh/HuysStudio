@@ -12,7 +12,7 @@ function regular_checks() {
 }
 
 async function roundr() {
-    let id_roundr = shell('echo proc/$(pidof mohammad.adib.roundr) | cut -f 2 -d "/"');
+    let id_roundr = shell("echo proc/$(pidof mohammad.adib.roundr) | cut -f 2 -d '/'");
     flash(id_roundr);
     flash(!id_roundr.match(/[0-9]+/));
     if (!id_roundr.match(/[0-9]+/)) {
