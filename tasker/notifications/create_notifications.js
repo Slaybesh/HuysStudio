@@ -14,9 +14,9 @@ async function timer () {
 
 create(text)
 
-function create(text) {
+async function create(text) {
     // var text;
-    performTask('create_notification', 5, `Timer|${text}|mw_image_timer|3`);
+    await performTask('create_notification', 5, `Timer|${text}|mw_image_timer|3`);
 }
 
 // async function launch_task(task_name, priority=5, par1='', par2='') {
