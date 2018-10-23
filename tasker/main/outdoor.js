@@ -1,5 +1,6 @@
+function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 async function outdoor() {
-    await sleep(300);
+    await sleep(30000);
     let WIFI = global('WIFI');
     let WIFII = global('WIFII');
     if (WIFII.includes('SCAN') && WIFII.includes('kthome') && WIFI == 'on') {
@@ -10,5 +11,6 @@ async function outdoor() {
             performTask('engage')
         }
     }
+    exit()
 }
 outdoor()
