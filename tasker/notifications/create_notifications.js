@@ -17,10 +17,10 @@ create()
 async function create() {
     // var text;
     launch_task('create_notification', 5, `Timer|0|mw_image_timer|3`);
-    // await sleep(1000)
-    // launch_task('create_notification', 5, `Timer|1|mw_image_timer|3`);
-    // await sleep(1000)
-    // launch_task('create_notification', 5, `Timer|2|mw_image_timer|3`);
+    await sleep(1000)
+    launch_task('create_notification', 5, `Timer|1|mw_image_timer|3`);
+    await sleep(1000)
+    launch_task('create_notification', 5, `Timer|2|mw_image_timer|3`);
     exit();
 }
 
