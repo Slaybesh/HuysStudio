@@ -114,7 +114,7 @@ async function pomodoro() {
 
             performTask('create_notification', parseInt(priority) + 1,
                         `Pomodoro Session|${time_left_min}:${time_left_sec} remaining|mw_image_timer|3`);
-            await sleep(2000);
+            await sleep(500);
         }
     } catch(error) {
         flashLong('pomodoro error')
