@@ -104,7 +104,6 @@ async function pomodoro() {
         
         while (Disengaged_until > TIMES) {
             TIMES = parseInt(global('TIMES'));
-            // TIMES++
 
             let time_left_min = Math.floor((Disengaged_until - TIMES) / 60);
             let time_left_sec = (Disengaged_until - TIMES) % 60;
@@ -113,7 +112,7 @@ async function pomodoro() {
 
             // flash(time_left_min + ':' + time_left_sec);
 
-            performTask('create_notification', 5,
+            performTask('create_notification', parseInt(priority) + 1,
                         `Pomodoro Session|${time_left_min}:${time_left_sec} remaining|mw_image_timer|3`);
             await sleep(2000);
         }
