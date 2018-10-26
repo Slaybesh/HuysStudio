@@ -1,15 +1,22 @@
-function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
+let higher_prio = parseInt(priority) + 1;
 
+
+function get_auto_input() {
+    performTask('Autoinput_ui_query', higher_prio);
+    let Autoinput_ui_query = JSON.parse(global('Autoinput_ui_query'));
+    let aipackage = Autoinput_ui_query.aipackage;
+    let aiapp = Autoinput_ui_query.aiapp;
+    return aipackage, aiapp
+}
 function get_vars(vars_str) {
+    /* vars_str is a JSON string containing 
+       app information */
     let vars = JSON.parse(vars_str);
-    // let auto_input = performTask('get_current_package');
-    // let aipackage = auto_input.package;
-    // let aiapp = auto_input.app;
-    let aipackage = 'asdf.asdfasdf.com';
-    let aiapp = 'asdf';
+
+    aipackage, aiapp = get_auto_input()
 
     let package = aipackage.replace(/\./g, '_');
-    let package = package.charAt(0).toUpperCase() + package.slice(1);
+    package = package.charAt(0).toUpperCase() + package.slice(1);
 
     // let app_info_str = global(package);
     let app_info_str;
@@ -38,23 +45,4 @@ function get_vars(vars_str) {
         return json_str
     }
 }
-console.log(get_vars)
-
-function app_start() {
-
-}
-
-async function app_blocker() {
-    performTask('regular_checks');
-
-    /* initialize vars */
-
-    let TIMES = parseInt(global('TIMES'));
-    let Disengaged_until = parseInt(global('Disengaged_until'));
-    let Disengaged = (global('Disengaged') === 'true');
-    let ignore_disengaged = (ignore_disengaged === 'false');
-
-    if (blocked_until > TIMES || Disengaged && !ignore_disengaged) {
-
-    }
-}
+get_vars(par1);
