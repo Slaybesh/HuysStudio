@@ -41,9 +41,11 @@ async function app_blocker() {
         do {
             app.last_used = parseInt(global('TIMES'));
             performTask('Notification.create', higher_prio, `Timer|${i}|mw_image_timer|2`);
-            performTask('Autoinput_ui_query', higher_prio);
-            aipackage, aiapp = get_auto_input()
             
+            let ai = get_auto_input();
+            let aipackage = ai.aipackage;
+            let aiapp = ai.aiapp;
+
             app.dur = app.dur + (TIMES - last_used);
             if (dur > max_dur) {
                 close();
@@ -61,27 +63,22 @@ async function close() {
 
 
 
-function get_vars() {
+function get_app() {
     /* vars_str is a JSON string containing 
        app information */
     let vars = JSON.parse(vars_str);
 
-    let aipackage, aiapp = get_auto_input()
+    let ai = get_auto_input();
+    let aipackage = ai.aipackage;
+    let aiapp = ai.aiapp;
 
     let package_var = aipackage.replace(/\./g, '_');
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
-    // let app_info_str = global(package);
-    let app_info_str;
-    if (app_info_str) {
-        let app_info = JSON.parse(app_info_str);
-        app_info.max_dur = vars.max_dur;
-        app_info.reset_time = vars.reset_time;
-        app_info.max_freq = vars.max_freq;
-        app_info.ignore_disengaged = vars.ignore_disengaged
-        return app_info
-    } else {
-        let dict = {
+    let app_info_str = global(package_var);
+    // let app_info_str;
+    if (!app_info_str) {
+        app_info_str = {
             max_dur: vars.max_dur,
             reset_time: vars.reset_time,
             max_freq: vars.max_freq,
@@ -95,7 +92,9 @@ function get_vars() {
             blocked_until: 0,
         }
         let json_str = JSON.stringify(dict);
-        return json_str
+        setGlobal(package_var, json_str);
+
+    return app_info_str
     }
 }
 
