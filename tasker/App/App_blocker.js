@@ -1,15 +1,75 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-function get_vars(vars_str) {
-    let vars = JSON.parse(vars_str);
-    // let auto_input = performTask('get_current_package');
-    // let aipackage = auto_input.package;
-    // let aiapp = auto_input.app;
-    let aipackage = 'asdf.asdfasdf.com';
-    let aiapp = 'asdf';
 
-    let package = aipackage.replace(/\./g, '_');
-    let package = package.charAt(0).toUpperCase() + package.slice(1);
+async function app_blocker() {
+    
+    /* initialize vars */
+    let higher_prio = parseInt(priority) + 1;
+    let TIMES = parseInt(global('TIMES'));
+    let Disengaged_until = parseInt(global('Disengaged_until'));
+    // let Disengaged = (global('Disengaged') === 'true');
+    let Disengaged = parseInt(global('Disengaged'));
+    let Pomo = parseInt(global('Pomo'));
+    
+    performTask('regular_checks', higher_prio);
+
+    if (Disengaged || Pomo) {
+        // performTask('App.close', higher_prio);
+        close();
+        return
+
+    } else {
+        let app = get_app();
+        
+        if (app.blocked_until > TIMES) {
+            close();
+            return
+        } else if (app.freq > app.max_freq) {
+            close();
+            return
+        } else if (TIMES - app.last_used > app.reset_time) {
+            app.dur = 0;
+            app.freq = 0;
+        }
+
+        app.freq = app.freq + 1;
+        performTask('App.ui', higher_prio);
+
+        let aipackage;
+        let aiapp;
+        
+        do {
+            app.last_used = parseInt(global('TIMES'));
+            performTask('Notification.create', higher_prio, `Timer|${i}|mw_image_timer|2`);
+            performTask('Autoinput_ui_query', higher_prio);
+            aipackage, aiapp = get_auto_input()
+            
+            app.dur = app.dur + (TIMES - last_used);
+            if (dur > max_dur) {
+                close();
+                return
+            }
+            await sleep(500);
+        } while (aipackage in [package, 'com.android.systemui', 'net.dinglisch.android.taskerm'])
+
+    }
+}
+
+async function close() {
+    performTask('Notification.cancel', higher_prio, name);
+}
+
+
+
+function get_vars() {
+    /* vars_str is a JSON string containing 
+       app information */
+    let vars = JSON.parse(vars_str);
+
+    let aipackage, aiapp = get_auto_input()
+
+    let package_var = aipackage.replace(/\./g, '_');
+    package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     // let app_info_str = global(package);
     let app_info_str;
@@ -38,51 +98,13 @@ function get_vars(vars_str) {
         return json_str
     }
 }
-console.log(get_vars)
 
-function app_start() {
-
-}
-
-async function app_blocker() {
-    
-    /* initialize vars */
-    let higher_prio = parseInt(priority) + 1;
-    let TIMES = parseInt(global('TIMES'));
-    let Disengaged_until = parseInt(global('Disengaged_until'));
-    // let Disengaged = (global('Disengaged') === 'true');
-    let Disengaged = parseInt(global('Disengaged'));
-    let ignore_disengaged = parseInt(ignore_disengaged);
-    
-    performTask('regular_checks', higher_prio);
-    if (blocked_until > TIMES || Disengaged && !ignore_disengaged) {
-        performTask('App.close', higher_prio);
-        return
-    } else if (freq > max_freq) {
-        performTask('App.close', higher_prio);
-        return
-    } else if (TIMES - last_used > reset_time) {
-        dur = 0;
-        freq = 0;
-    }
-    freq++;
-    performTask('App.ui', higher_prio);
-    let aipackage;
-    do {
-        last_used = parseInt(global('TIMES'));
-        performTask('Notification.create', higher_prio, `Timer|${i}|mw_image_timer|2`);
-        performTask('Autoinput_ui_query', higher_prio);
-        aipackage = global('Aipackage');
-        
-        dur = dur + (TIMES - last_used);
-        if (dur > max_dur) {
-            performTask('App.close', higher_prio);
-            return
-        }
-        await sleep(500);
-    } while (aipackage in [package, 'com.android.systemui', 'net.dinglisch.android.taskerm'])
-
-    performTask('Notification.cancel', higher_prio, name);
+function get_auto_input() {
+    performTask('Autoinput_ui_query', higher_prio);
+    let Autoinput_ui_query = JSON.parse(global('Autoinput_ui_query'));
+    // let aipackage = Autoinput_ui_query.aipackage;
+    // let aiapp = Autoinput_ui_query.aiapp;
+    return Autoinput_ui_query
 }
 
 function pad(n, padding) {

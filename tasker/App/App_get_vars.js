@@ -15,8 +15,8 @@ function get_vars(vars_str) {
 
     aipackage, aiapp = get_auto_input()
 
-    let package = aipackage.replace(/\./g, '_');
-    package = package.charAt(0).toUpperCase() + package.slice(1);
+    let package_var = aipackage.replace(/\./g, '_');
+    package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     // let app_info_str = global(package);
     let app_info_str;
