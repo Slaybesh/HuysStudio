@@ -20,7 +20,6 @@ async function roundr() {
     // flash(id_roundr);
     if (!id_roundr.match(/[0-9]+/)) {
         loadApp('Roundr', '', true);
-        performTask('Remove Persistent');
         await sleep(100);
         button('back');
     }
