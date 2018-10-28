@@ -13,7 +13,7 @@ async function regular_checks() {
 
 function remove_persistent() {
     writeFile('Tasker/log/regular_checks.txt', 'start remove_persistent\n', true)
-    let persistent_apps = JSON.parse(global(Apps_persistent));
+    let persistent_apps = JSON.parse(global('Apps_persistent'));
     writeFile('Tasker/log/regular_checks.txt', persistent_apps + '\n', true)
     for (i in persistent_apps) {
         performTask('Notification.snooze', parseInt(priority) + 1, persistent_apps[i], 10000000000000);
@@ -33,3 +33,4 @@ async function roundr() {
 }
 
 regular_checks().then(() => exit());
+writeFile('Tasker/log/regular_checks.txt', '\n', true)
