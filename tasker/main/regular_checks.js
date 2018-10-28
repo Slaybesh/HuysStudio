@@ -6,11 +6,15 @@ function regular_checks() {
     performTask('Remove Persistent');
     performTask('Zooper Disengaged');
     performTask('Zooper Reload Location');
-    // performTask('remove_persistent_notifications');
-    // performTask('zooper_disengaged');
-    // performTask('zooper_reload_location');
+    remove_persistent()
 }
 
+async function remove_persistent() {
+    let persistent_apps = JSON.parse(global(Apps_persistent));
+    for (i in persistent_apps) {
+        performTask('Notification.snooze', parseInt(priority) + 1, persistent_apps[i], 10000000000000);
+    }
+}
 async function roundr() {
     let id_roundr = shell("echo proc/$(pidof mohammad.adib.roundr) | cut -f 2 -d '/'", true);
     // flash(id_roundr);

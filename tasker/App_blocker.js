@@ -1,10 +1,10 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 
+let higher_prio = parseInt(priority) + 1;
 async function app_blocker() {
     
     /* initialize vars */
-    let higher_prio = parseInt(priority) + 1;
     let TIMES = parseInt(global('TIMES'));
     let Disengaged_until = parseInt(global('Disengaged_until'));
     // let Disengaged = (global('Disengaged') === 'true');
@@ -53,7 +53,9 @@ async function app_blocker() {
     }
 }
 
-async function close(app, reset) {
+
+function close(app, reset) {
+    goHome(0);
     performTask('Notification.cancel', higher_prio, name);
 
     let TIMES = parseInt(global('TIMES'));
@@ -63,15 +65,12 @@ async function close(app, reset) {
         app.freq = 0;
         app.blocked_until = TIMES + app.reset_time;
     }
-    setGlobal(package_var, JSON.stringify(app_json));
+    setGlobal(package_var, JSON.stringify(app_json, null, 2));
 
-    performTask('Remove Notifications');
-    goHome(0);
-    ui();
+    performTask('Notification.snooze');
     performTask('Regular Checks');
+    ui();
 }
-
-
 
 function get_app() {
     /* vars_str is a JSON string containing 
@@ -92,14 +91,14 @@ function get_app() {
             reset_time: 3600,
             max_freq: 10,
 
-            name: ai.aiapp,
-            package: ai.aipackage,
+            name: ai.app,
+            package: ai.package,
             dur: 0,
             freq: 0,
             last_used: 0,
             blocked_until: 0,
         }
-        setGlobal(package_var, JSON.stringify(app_json));
+        setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
     return app_json
 }
@@ -112,9 +111,9 @@ function get_app() {
 /* ######################################################################### */
 //
 function get_auto_input() {
-    launch_task('Autoinput_ui_query', higher_prio);
-    let Autoinput_ui_query = JSON.parse(global('Ai_ui_query'));
-    return Autoinput_ui_query
+    launch_task('AutoInput UI Query', higher_prio);
+    let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
+    return ai
 }
 
 async function launch_task(task_name) {

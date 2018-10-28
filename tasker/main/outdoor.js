@@ -7,6 +7,7 @@ async function outdoor() {
         callVol(4, false, false);
         setGlobal('Indoor', 0);
         setGlobal('Outdoor', 1);
+        shell('settings put system doze_mode_policy 0');
         if (parseInt(global('Disengaged'))) {
             performTask('engage')
         }
