@@ -7,6 +7,7 @@ function create_logger(path) {
         let time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds();
         writeFile(path, `${time} ${msg}\n`, true);
     }
+    return logger
 }
 
 logger = create_logger('Tasker/log/regular_checks.txt');
