@@ -1,5 +1,10 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
+// var date = new Date(); 
+// let time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds();
+// function logger()
+
+
 async function regular_checks() {
     writeFile('Tasker/log/regular_checks.txt', 'start regular_checks\n', true)
     shell('settings put secure enabled_accessibility_services' + global('Accessibility_services'));
@@ -32,4 +37,4 @@ async function roundr() {
 }
 
 regular_checks().then(() => exit());
-writeFile('Tasker/log/regular_checks.txt', '\n', true)
+writeFile('Tasker/log/regular_checks.txt', '\nendd', true)
