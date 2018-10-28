@@ -34,7 +34,7 @@ function create_logger(path) {
                  + date.getFullMinutes() + ":" 
                  + date.getFullSeconds() + ":" 
                  + date.getFullMilliseconds();
-        writeFile(path, `${time} ${msg}\n`, true);
+        writeFile(path, `${time}    ${msg}\n`, true);
     }
 }
 
