@@ -35,16 +35,12 @@ async function app_blocker() {
         app.freq = app.freq + 1;
         performTask('App.ui', higher_prio);
 
-        let aipackage;
-        let aiapp;
-        
+        let ai;
         do {
             app.last_used = parseInt(global('TIMES'));
             performTask('Notification.create', higher_prio, `Timer|${i}|mw_image_timer|2`);
             
-            let ai = get_auto_input();
-            let aipackage = ai.aipackage;
-            let aiapp = ai.aiapp;
+            ai = get_auto_input();
 
             app.dur = app.dur + (TIMES - last_used);
             if (dur > max_dur) {
@@ -52,13 +48,27 @@ async function app_blocker() {
                 return
             }
             await sleep(500);
-        } while (aipackage in [package, 'com.android.systemui', 'net.dinglisch.android.taskerm'])
+        } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'])
 
     }
 }
 
-async function close() {
+async function close(app, reset) {
     performTask('Notification.cancel', higher_prio, name);
+
+    let TIMES = parseInt(global('TIMES'));
+
+    if (reset) {
+        app.dur = 0;
+        app.freq = 0;
+        app.blocked_until = TIMES + app.reset_time;
+    }
+    setGlobal(package_var, JSON.stringify(app_json));
+
+    performTask('Remove Notifications');
+    goHome(0);
+    ui();
+    performTask('Regular Checks');
 }
 
 
@@ -66,44 +76,54 @@ async function close() {
 function get_app() {
     /* vars_str is a JSON string containing 
        app information */
-    let vars = JSON.parse(vars_str);
 
     let ai = get_auto_input();
-    let aipackage = ai.aipackage;
-    let aiapp = ai.aiapp;
 
     let package_var = aipackage.replace(/\./g, '_');
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
-    let app_info_str = global(package_var);
-    // let app_info_str;
-    if (!app_info_str) {
-        app_info_str = {
-            max_dur: vars.max_dur,
-            reset_time: vars.reset_time,
-            max_freq: vars.max_freq,
-            ignore_disengaged: vars.ignore_disengaged,
+    let app_json_str = global(package_var);
+    let app_json;
+    if (app_json_str) {
+        app_json = JSON.parse(app_json_str);
+    } else {
+        app_json = {
+            max_dur: 600,
+            reset_time: 3600,
+            max_freq: 10,
 
-            name: aiapp,
-            package: aipackage,
+            name: ai.aiapp,
+            package: ai.aipackage,
             dur: 0,
             freq: 0,
             last_used: 0,
             blocked_until: 0,
         }
-        let json_str = JSON.stringify(dict);
-        setGlobal(package_var, json_str);
-
-    return app_info_str
+        setGlobal(package_var, JSON.stringify(app_json));
     }
+    return app_json
 }
 
+
+
+
+/* ######################################################################### */
+/* ################################ helpers ################################ */
+/* ######################################################################### */
+//
 function get_auto_input() {
-    performTask('Autoinput_ui_query', higher_prio);
-    let Autoinput_ui_query = JSON.parse(global('Autoinput_ui_query'));
-    // let aipackage = Autoinput_ui_query.aipackage;
-    // let aiapp = Autoinput_ui_query.aiapp;
+    launch_task('Autoinput_ui_query', higher_prio);
+    let Autoinput_ui_query = JSON.parse(global('Ai_ui_query'));
     return Autoinput_ui_query
+}
+
+async function launch_task(task_name) {
+    // if (debugging) {flash('Starting: ' + task_name)}
+    
+    performTask(task_name);
+    while (global('TRUN').includes(task_name)) {await sleep(100)}
+
+    if (debugging) {flash('Finished: ' + task_name)}
 }
 
 function pad(n, padding) {
