@@ -36,5 +36,7 @@ async function roundr() {
     writeFile('Tasker/log/regular_checks.txt', 'end roundr\n', true)
 }
 
-regular_checks().then(() => exit());
-writeFile('Tasker/log/regular_checks.txt', '\nendd', true)
+regular_checks().then(() => {
+    writeFile('Tasker/log/regular_checks.txt', '\n', true);
+    exit();
+});
