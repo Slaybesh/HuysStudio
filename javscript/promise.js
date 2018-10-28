@@ -21,7 +21,6 @@ var sequentialStart = async function () {
 
     // If the value of the expression following the await operator is not a Promise, it's converted to a resolved Promise.
     const slow = await resolveAfter2Seconds();
-
     const fast = await resolveAfter1Second();
     console.log(slow);
     console.log(fast);
