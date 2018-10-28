@@ -3,10 +3,8 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 async function regular_checks() {
     writeFile('Tasker/log/regular_checks.txt', 'start regular_checks\n', true)
     shell('settings put secure enabled_accessibility_services' + global('Accessibility_services'));
-    // roundr();
-    // remove_persistent();
-    Promise.all([roundr(), remove_persistent()])
-    // performTask('Remove Persistent');
+    await roundr();
+    await remove_persistent();
     performTask('Zooper Disengaged');
     performTask('Zooper Reload Location');
     writeFile('Tasker/log/regular_checks.txt', 'end regular_checks\n', true)
@@ -15,7 +13,7 @@ async function regular_checks() {
 async function remove_persistent() {
     writeFile('Tasker/log/regular_checks.txt', 'start remove_persistent\n', true)
     let persistent_apps = JSON.parse(global('Apps_persistent'));
-    writeFile('Tasker/log/regular_checks.txt', persistent_apps + '\n', true)
+    // writeFile('Tasker/log/regular_checks.txt', persistent_apps + '\n', true)
     for (i in persistent_apps) {
         performTask('Notification.snooze', parseInt(priority) + 1, persistent_apps[i], 10000000000000);
     }
