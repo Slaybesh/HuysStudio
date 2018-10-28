@@ -2,12 +2,40 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 
 function create_logger(path) {
-    function logger(msg) {
+    Date.prototype.getFullHours = function () {
+        if (this.getHours() < 10) {
+            return '0' + this.getHours();
+        }
+        return this.getHours();
+    };
+    Date.prototype.getFullMinutes = function () {
+        if (this.getMinutes() < 10) {
+            return '0' + this.getMinutes();
+        }
+        return this.getMinutes();
+    };
+    Date.prototype.getFullSeconds = function () {
+        if (this.getSeconds() < 10) {
+            return '0' + this.getSeconds();
+        }
+        return this.getSeconds();
+    };
+    Date.prototype.getFullMilliseconds = function () {
+        if (this.getMilliseconds() < 10) {
+            return '00' + this.getMilliseconds();
+        } else if (this.getMilliseconds() < 100) {
+            return '0' + this.getMilliseconds();
+        }
+        return this.getMilliseconds();
+    };
+    return function(msg) {
         var date = new Date(); 
-        let time = date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ":" + date.getMilliseconds();
+        let time = date.getFullHours() + ":" 
+                 + date.getFullMinutes() + ":" 
+                 + date.getFullSeconds() + ":" 
+                 + date.getFullMilliseconds();
         writeFile(path, `${time} ${msg}\n`, true);
     }
-    return logger
 }
 
 logger = create_logger('Tasker/log/regular_checks.txt');
