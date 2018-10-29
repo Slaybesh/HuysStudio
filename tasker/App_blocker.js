@@ -1,5 +1,43 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
+function create_logger(path) {
+    Date.prototype.getFullHours = function () {
+        if (this.getHours() < 10) {
+            return '0' + this.getHours();
+        }
+        return this.getHours();
+    };
+    Date.prototype.getFullMinutes = function () {
+        if (this.getMinutes() < 10) {
+            return '0' + this.getMinutes();
+        }
+        return this.getMinutes();
+    };
+    Date.prototype.getFullSeconds = function () {
+        if (this.getSeconds() < 10) {
+            return '0' + this.getSeconds();
+        }
+        return this.getSeconds();
+    };
+    Date.prototype.getFullMilliseconds = function () {
+        if (this.getMilliseconds() < 10) {
+            return '00' + this.getMilliseconds();
+        } else if (this.getMilliseconds() < 100) {
+            return '0' + this.getMilliseconds();
+        }
+        return this.getMilliseconds();
+    };
+    return function(msg) {
+        var date = new Date(); 
+        let time = date.getFullHours() + ":" 
+                 + date.getFullMinutes() + ":" 
+                 + date.getFullSeconds() + ":" 
+                 + date.getFullMilliseconds();
+        writeFile(path, `${time}    ${msg}\n`, true);
+    }
+}
+
+logger = create_logger('Tasker/log/app_blocker.txt');
 
 let higher_prio = parseInt(priority) + 1;
 async function app_blocker() {
@@ -33,7 +71,7 @@ async function app_blocker() {
         }
 
         app.freq = app.freq + 1;
-        performTask('App.ui', higher_prio);
+        ui()
 
         let ai;
         do {
@@ -55,7 +93,8 @@ async function app_blocker() {
 
 
 function close(app, reset) {
-    goHome(0);
+    // goHome(0);
+    ui();
     performTask('Notification.cancel', higher_prio, name);
 
     let TIMES = parseInt(global('TIMES'));
@@ -69,7 +108,10 @@ function close(app, reset) {
 
     performTask('Notification.snooze');
     performTask('Regular Checks');
-    ui();
+}
+
+function ui(app) {
+
 }
 
 function get_app() {
@@ -117,12 +159,12 @@ function get_auto_input() {
 }
 
 async function launch_task(task_name) {
-    // if (debugging) {flash('Starting: ' + task_name)}
+    logger('launching: ' + task_name)
     
     performTask(task_name);
     while (global('TRUN').includes(task_name)) {await sleep(100)}
 
-    if (debugging) {flash('Finished: ' + task_name)}
+    logger('finishing: ' + task_name)
 }
 
 function pad(n, padding) {
