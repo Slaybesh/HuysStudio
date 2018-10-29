@@ -4,62 +4,63 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 const logger = create_logger('Tasker/log/app_blocker.txt');
 
 const higher_prio = parseInt(priority) + 1;
-let TIMES = () => {return parseInt(global('TIMES'))}
-let Disengaged_until = () => {return parseInt(global('Disengaged_until'))}
-let Disengaged = () => {return parseInt(global('Disengaged'))}
-let Pomo = () => {return parseInt(global('Pomo'))}
+const TIMES = () => {return parseInt(global('TIMES'))}
+const Disengaged_until = () => {return parseInt(global('Disengaged_until'))}
+// const Disengaged = () => {return parseInt(global('Disengaged'))}
+// const Pomo = () => {return parseInt(global('Pomo'))}
 
 function get_global(variable) {
 
 }
 
-async function app_blocker() {
+app_blocker(par1)
+async function app_blocker(blocked=false) {
     
     /* initialize vars */
     
     performTask('regular_checks', higher_prio);
 
-    if (Disengaged || Pomo) {
-        close();
+    if (blocked) {
+        block();
         return
-
-    } else {
-        let app = get_app();
-        
-        if (app.blocked_until > TIMES) {
-            close();
-            return
-        } else if (app.freq > app.max_freq) {
-            close();
-            reset_vars(app);
-            return
-        } else if (TIMES - app.last_used > app.reset_time) {
-            app.dur = 0;
-            app.freq = 0;
-        }
-
-        app.freq = app.freq + 1;
-        ui(app);
-
-        let ai;
-        do {
-            app.last_used = TIMES();
-
-            performTask('Notification.create', higher_prio,
-                        `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timer|2`);
-            
-            ai = get_auto_input();
-
-            app.dur = app.dur + (TIMES - last_used);
-            if (dur > max_dur) {
-                close();
-                reset_vars(app);
-                return
-            }
-            await sleep(500);
-        } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'])
-
     }
+
+    let app = get_app_json();
+    
+    if (app.blocked_until > TIMES()) {
+        block();
+        return
+    } else if (app.freq > app.max_freq) {
+        block();
+        reset_vars(app);
+        return
+    } else if (TIMES() - app.last_used > app.reset_time) {
+        app.dur = 0;
+        app.freq = 0;
+    }
+
+    app.freq = app.freq + 1;
+    show_ui(app);
+
+    let ai;
+    do {
+        app.last_used = TIMES();
+
+        performTask('Notification.create', higher_prio,
+                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timer|2`);
+        
+        ai = get_current_app();
+
+        app.dur = app.dur + (TIMES - last_used);
+        if (dur > max_dur) {
+            block();
+            reset_vars(app);
+            break
+        }
+        await sleep(500);
+    } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'])
+    performTask('Notification.cancel', higher_prio, app.name);
+
 }
 
 
@@ -71,30 +72,29 @@ function reset_vars(app) {
 
     setGlobal(app.package_var, JSON.stringify(app_json, null, 2));
 }
-function close(app, reset) {
+function block(app) {
     // goHome(0);
-    ui(app);
-    performTask('Notification.cancel', higher_prio, app.name);
-
+    show_ui(app);
 
     performTask('Notification.snooze');
-    performTask('Regular Checks');
 }
 
-function ui(app) {
+function show_ui(app) {
     destroyScene('App_blocker_ui');
     createScene('App_blocker_ui');
     
     time_left_string(app.dur, app.max_dur);
 
-    if (Disengaged_until > TIMES())
+    if (Disengaged_until() > TIMES()) {
+
+    }
 }
 
-function get_app() {
+function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    let ai = get_auto_input();
+    let ai = get_current_app();
 
     let package_var = aipackage.replace(/\./g, '_');
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
@@ -129,7 +129,7 @@ function get_app() {
 /* ################################ helpers ################################ */
 /* ######################################################################### */
 //
-function get_auto_input() {
+function get_current_app() {
     launch_task('AutoInput UI Query', higher_prio);
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
     return ai
@@ -164,29 +164,46 @@ function time_left_string(curr_time, future_time) {
 
 
 function create_logger(path) {
-    Date.prototype.getFullHours = function () {
-        if (this.getHours() < 10) {return '0' + this.getHours()}
-        return this.getHours();
-    };
-    Date.prototype.getFullMinutes = function () {
-        if (this.getMinutes() < 10) {return '0' + this.getMinutes()}
-        return this.getMinutes();
-    };
-    Date.prototype.getFullSeconds = function () {
-        if (this.getSeconds() < 10) {return '0' + this.getSeconds()}
-        return this.getSeconds();
-    };
-    Date.prototype.getFullMilliseconds = function () {
-        if (this.getMilliseconds() < 10) {return '00' + this.getMilliseconds()}
-        else if (this.getMilliseconds() < 100) {return '0' + this.getMilliseconds()}
-        return this.getMilliseconds();
-    };
+
     return function(msg) {
         var date = new Date(); 
-        let time = date.getFullHours() + ":" 
-                 + date.getFullMinutes() + ":" 
-                 + date.getFullSeconds() + ":" 
-                 + date.getFullMilliseconds();
+        let hours = '0' + date.getHours();
+        let min = '0' + date.getMinutes();
+        let sec = '0' + date.getSeconds();
+        let ms = '00' + date.getMilliseconds();
+        let time = hours.substr(-2) + ":" 
+                 + min.substr(-2) + ":" 
+                 + sec.substr(-2) + ":" 
+                 + ms.substr(-3);
         writeFile(path, `${time}    ${msg}\n`, true);
     }
 }
+//#region
+// function create_logger(path) {
+//     Date.prototype.getFullHours = function () {
+//         if (this.getHours() < 10) {return '0' + this.getHours()}
+//         return this.getHours();
+//     };
+//     Date.prototype.getFullMinutes = function () {
+//         if (this.getMinutes() < 10) {return '0' + this.getMinutes()}
+//         return this.getMinutes();
+//     };
+//     Date.prototype.getFullSeconds = function () {
+//         if (this.getSeconds() < 10) {return '0' + this.getSeconds()}
+//         return this.getSeconds();
+//     };
+//     Date.prototype.getFullMilliseconds = function () {
+//         if (this.getMilliseconds() < 10) {return '00' + this.getMilliseconds()}
+//         else if (this.getMilliseconds() < 100) {return '0' + this.getMilliseconds()}
+//         return this.getMilliseconds();
+//     };
+//     return function(msg) {
+//         var date = new Date(); 
+//         let time = date.getFullHours() + ":" 
+//                  + date.getFullMinutes() + ":" 
+//                  + date.getFullSeconds() + ":" 
+//                  + date.getFullMilliseconds();
+//         writeFile(path, `${time}    ${msg}\n`, true);
+//     }
+// }
+//#endregion
