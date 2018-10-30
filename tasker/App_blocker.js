@@ -10,9 +10,6 @@ const Disengaged = () => {return parseInt(global('Disengaged'))}
 const Pomo = () => {return parseInt(global('Pomo'))}
 let Pomo_until = () => {return parseInt(global('Pomo_until'))}
 
-function get_global(variable) {
-
-}
 
 app_blocker(par1)
 async function app_blocker(blocked=false) {
@@ -22,19 +19,19 @@ async function app_blocker(blocked=false) {
     performTask('regular_checks', higher_prio);
 
     if (blocked) {
-        show_ui(app);
-        return
+        show_ui(app, blocked);
+        exit();
     }
 
     let app = get_app_json();
     
     if (app.blocked_until > TIMES()) {
         show_ui(app);
-        return
+        exit();
     } else if (app.freq > app.max_freq) {
         show_ui(app);
         reset_vars(app);
-        return
+        exit();
     } else if (TIMES() - app.last_used > app.reset_time) {
         app.dur = 0;
         app.freq = 0;
@@ -47,57 +44,72 @@ async function app_blocker(blocked=false) {
     do {
         app.last_used = TIMES();
 
+        ai = get_current_app();
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
-        ai = get_current_app();
 
-        app.dur = app.dur + (TIMES - last_used);
-        if (dur > max_dur) {
+        await sleep(500);
+        app.dur = app.dur + (TIMES() - app.last_used);
+        if (app.dur > app.max_dur) {
             show_ui(app);
             reset_vars(app);
             break
         }
-        await sleep(500);
-    } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'])
-    performTask('Notification.cancel', higher_prio, app.name);
+    } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']);
+
+    setGlobal(app.package_var, JSON.stringify(app, null, 2));
+    launch_task('Notification.cancel', higher_prio, app.name);
+    exit();
 }
 
 
 function reset_vars(app) {
 
-    performTask('Notification.snooze');
     app.dur = 0;
     app.freq = 0;
     app.blocked_until = TIMES() + app.reset_time;
-
-    setGlobal(app.package_var, JSON.stringify(app_json, null, 2));
+    setGlobal(app.package_var, JSON.stringify(app, null, 2));
+    
+    performTask('Notification.snooze');
 }
 
 
-function show_ui(app) {
+function show_ui(app, blocked=false) {
     destroyScene('App_blocker_ui');
 
     let TIMES = TIMES();
     let Disengaged_until = Disengaged_until();
     let Pomo_until = Pomo_until();
     
-    let blocked = '';
-    if (Pomo_until > TIMES) {
-        blocked = 'Currently in Pomo Session.\nCome back at ' + unix_to_time(Pomo_until);
-    } else if (Disengaged_until > TIMES) {
-        blocked = 'Currently Disengaged.\nCome back at ' + unix_to_time(Disengaged_until);
-    } else if (Disengaged()) {
-        blocked = 'Currently Disengaged.\nCome back tomorrow.';
-    } else if (app.blocked_until > TIMES) {
-        blocked = 'Currently blocked.\nCome back at ' + unix_to_time(app.blocked_until);
+    let information = '';
+    if (blocked) {
+        if (Pomo_until > TIMES) {
+            information = 'Currently in Pomo Session.\nCome back at ' + unix_to_time(Pomo_until);
+        } else if (Disengaged_until > TIMES) {
+            information = 'Currently Disengaged.\nCome back at ' + unix_to_time(Disengaged_until);
+        } else if (Disengaged()) {
+            information = 'Currently Disengaged.\nCome back tomorrow.';
+        }
+    } else {
+        if (app.blocked_until > TIMES) {
+            information = 'Currently blocked.\nCome back at ' + unix_to_time(app.blocked_until);
+        } else {
+            let time_left = time_left_string(app.dur, app.max_dur);
+            information = `Time left: ${time_left}\nTimes opened: ${app.freq}`
+        }
+
     }
     
-    let time_left = time_left_string(app.dur, app.max_dur);
-    let information = `${blocked}\nTime left: ${time_left}\nTimes opened: ${app.freq}`;
     elemText('App_blocker_ui', 'information', 'repl', information);
     showScene('App_blocker_ui', 'ActivityFullDisplay', 0, 0, false, false);
 }
+
+
+/* ######################################################################### */
+/* ################################ helpers ################################ */
+/* ######################################################################### */
+//
 
 function get_app_json() {
     /* vars_str is a JSON string containing 
@@ -131,13 +143,6 @@ function get_app_json() {
     return app_json
 }
 
-
-
-
-/* ######################################################################### */
-/* ################################ helpers ################################ */
-/* ######################################################################### */
-//
 function get_current_app() {
     launch_task('AutoInput UI Query', higher_prio);
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
@@ -170,7 +175,6 @@ function time_left_string(curr_time, future_time) {
 
     return time_left
 }
-
 
 function unix_to_time(unix_ts) {
     let date = new Date(unix_ts * 1000);
