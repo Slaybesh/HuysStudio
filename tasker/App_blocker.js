@@ -77,21 +77,21 @@ function reset_vars(app) {
 function show_ui(app, blocked=false) {
     destroyScene('App_blocker_ui');
 
-    let TIMES = TIMES();
+    let curr_time = TIMES();
     let Disengaged_until = Disengaged_until();
     let Pomo_until = Pomo_until();
     
     let information = '';
     if (blocked) {
-        if (Pomo_until > TIMES) {
+        if (Pomo_until > curr_time) {
             information = 'Currently in Pomo Session.\nCome back at ' + unix_to_time(Pomo_until);
-        } else if (Disengaged_until > TIMES) {
+        } else if (Disengaged_until > curr_time) {
             information = 'Currently Disengaged.\nCome back at ' + unix_to_time(Disengaged_until);
         } else if (Disengaged()) {
             information = 'Currently Disengaged.\nCome back tomorrow.';
         }
     } else {
-        if (app.blocked_until > TIMES) {
+        if (app.blocked_until > curr_time) {
             information = 'Currently blocked.\nCome back at ' + unix_to_time(app.blocked_until);
         } else {
             let time_left = time_left_string(app.dur, app.max_dur);
