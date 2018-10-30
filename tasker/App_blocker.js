@@ -4,14 +4,13 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 const logger = create_logger('Tasker/log/app_blocker.txt');
 
 const higher_prio = parseInt(priority) + 1;
-const TIMES = () => {return parseInt(global('TIMES'))}
-const Disengaged_until = () => {return parseInt(global('Disengaged_until'))}
-const Disengaged = () => {return parseInt(global('Disengaged'))}
-const Pomo = () => {return parseInt(global('Pomo'))}
+let TIMES = () => {return parseInt(global('TIMES'))}
+let Disengaged_until = () => {return parseInt(global('Disengaged_until'))}
+let Disengaged = () => {return parseInt(global('Disengaged'))}
 let Pomo_until = () => {return parseInt(global('Pomo_until'))}
 
-
-app_blocker(par1)
+var par1;
+app_blocker(par1);
 async function app_blocker(blocked=false) {
     
     /* initialize vars */
@@ -117,7 +116,7 @@ function get_app_json() {
 
     let ai = get_current_app();
 
-    let package_var = aipackage.replace(/\./g, '_');
+    let package_var = ai.package.replace(/\./g, '_');
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     let app_json_str = global(package_var);
