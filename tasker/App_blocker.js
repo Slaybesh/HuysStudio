@@ -119,6 +119,7 @@ function get_app_json() {
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     let app_json_str = global(package_var);
+    logger('app_json_str' + app_json_str);
     let app_json;
     if (app_json_str) {
         app_json = JSON.parse(app_json_str);
