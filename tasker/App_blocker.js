@@ -18,17 +18,17 @@ async function app_blocker(blocked=false) {
     performTask('regular_checks', higher_prio);
 
     if (blocked) {
-        show_ui(app, blocked);
+        // show_ui(app, blocked);
         exit();
     }
 
     let app = get_app_json();
     
     if (app.blocked_until > TIMES()) {
-        show_ui(app);
+        // show_ui(app);
         exit();
     } else if (app.freq > app.max_freq) {
-        show_ui(app);
+        // show_ui(app);
         reset_vars(app);
         exit();
     } else if (TIMES() - app.last_used > app.reset_time) {
@@ -37,13 +37,14 @@ async function app_blocker(blocked=false) {
     }
 
     app.freq = app.freq + 1;
-    show_ui(app);
+    // show_ui(app);
 
     let ai;
     do {
         app.last_used = TIMES();
 
         ai = get_current_app();
+        logger(ai);
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
@@ -51,7 +52,7 @@ async function app_blocker(blocked=false) {
         await sleep(500);
         app.dur = app.dur + (TIMES() - app.last_used);
         if (app.dur > app.max_dur) {
-            show_ui(app);
+            // show_ui(app);
             reset_vars(app);
             break
         }
@@ -99,7 +100,7 @@ function show_ui(app, blocked=false) {
     }
     
     elemText('App_blocker_ui', 'information', 'repl', information);
-    showScene('App_blocker_ui', 'ActivityFullDisplay', 0, 0, false, false);
+    showScene('App_blocker_ui', 'ActivityFullWindow', 0, 0, false, false);
 }
 
 
