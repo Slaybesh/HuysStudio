@@ -44,7 +44,6 @@ async function app_blocker(blocked=false) {
         app.last_used = TIMES();
 
         ai = get_current_app();
-        logger(ai);
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
