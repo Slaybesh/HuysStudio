@@ -143,7 +143,7 @@ function get_app_json() {
 
 function get_current_app() {
     launch_task('AutoInput UI Query', higher_prio);
-    logger(ai)
+    // logger(global('Return_AutoInput_UI_Query'))
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
     return ai
 }
