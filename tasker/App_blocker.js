@@ -59,7 +59,8 @@ async function app_blocker(blocked=false) {
     } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']);
 
     setGlobal(app.package_var, JSON.stringify(app, null, 2));
-    launch_task('Notification.cancel', higher_prio, app.name);
+    performTask('Notification.cancel', higher_prio, app.name);
+    logger()
     exit();
 }
 
@@ -143,6 +144,7 @@ function get_app_json() {
 
 function get_current_app() {
     launch_task('AutoInput UI Query', higher_prio);
+    logger(ai)
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
     return ai
 }
