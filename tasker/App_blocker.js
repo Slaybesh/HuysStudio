@@ -44,6 +44,7 @@ async function app_blocker(blocked=false) {
         app.last_used = TIMES();
 
         ai = get_current_app();
+        logger('ai.package: ' + ai.package);
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
@@ -57,9 +58,13 @@ async function app_blocker(blocked=false) {
         }
     } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']);
 
+    if (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']) {
+        logger('yes');
+    }
+
     setGlobal(app.package_var, JSON.stringify(app, null, 2));
     performTask('Notification.cancel', higher_prio, app.name);
-    logger()
+    logger('out of app');
     exit();
 }
 
@@ -119,7 +124,7 @@ function get_app_json() {
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     let app_json_str = global(package_var);
-    logger('app_json_str' + app_json_str);
+    // logger('app_json_str' + app_json_str);
     let app_json;
     if (app_json_str) {
         app_json = JSON.parse(app_json_str);
@@ -198,32 +203,3 @@ function create_logger(path) {
         writeFile(path, `${time}    ${msg}\n`, true);
     }
 }
-//#region
-// function create_logger(path) {
-//     Date.prototype.getFullHours = function () {
-//         if (this.getHours() < 10) {return '0' + this.getHours()}
-//         return this.getHours();
-//     };
-//     Date.prototype.getFullMinutes = function () {
-//         if (this.getMinutes() < 10) {return '0' + this.getMinutes()}
-//         return this.getMinutes();
-//     };
-//     Date.prototype.getFullSeconds = function () {
-//         if (this.getSeconds() < 10) {return '0' + this.getSeconds()}
-//         return this.getSeconds();
-//     };
-//     Date.prototype.getFullMilliseconds = function () {
-//         if (this.getMilliseconds() < 10) {return '00' + this.getMilliseconds()}
-//         else if (this.getMilliseconds() < 100) {return '0' + this.getMilliseconds()}
-//         return this.getMilliseconds();
-//     };
-//     return function(msg) {
-//         var date = new Date(); 
-//         let time = date.getFullHours() + ":" 
-//                  + date.getFullMinutes() + ":" 
-//                  + date.getFullSeconds() + ":" 
-//                  + date.getFullMilliseconds();
-//         writeFile(path, `${time}    ${msg}\n`, true);
-//     }
-// }
-//#endregion
