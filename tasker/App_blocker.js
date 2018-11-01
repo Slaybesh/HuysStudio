@@ -58,13 +58,15 @@ async function app_blocker(blocked=false) {
         }
     } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']);
 
-    if (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']) {
+    logger(ai.package);
+    logger(app.package);
+        if (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']) {
         logger('yes');
     }
 
     setGlobal(app.package_var, JSON.stringify(app, null, 2));
     performTask('Notification.cancel', higher_prio, app.name);
-    logger('out of app');
+    logger('out of app\n');
     exit();
 }
 
