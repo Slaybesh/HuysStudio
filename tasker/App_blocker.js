@@ -56,11 +56,11 @@ async function app_blocker(blocked=false) {
             reset_vars(app);
             break
         }
-    } while (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']);
+    } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1);
 
-    logger(ai.package);
-    logger(app.package);
-        if (ai.package in [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm']) {
+    // logger(ai.package);
+    // logger(app.package);
+        if ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1) {
         logger('yes');
     }
 
