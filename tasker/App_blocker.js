@@ -12,9 +12,7 @@ let Pomo_until = () => {return parseInt(global('Pomo_until'))}
 var par1;
 app_blocker(par1);
 async function app_blocker(blocked=false) {
-    
-    /* initialize vars */
-    
+        
     performTask('regular_checks', higher_prio);
 
     if (blocked) {
@@ -100,7 +98,6 @@ function show_ui(app, blocked=false) {
             let time_left = time_left_string(app.dur, app.max_dur);
             information = `Time left: ${time_left}\nTimes opened: ${app.freq}`
         }
-
     }
     
     elemText('App_blocker_ui', 'information', 'repl', information);
@@ -145,8 +142,8 @@ function get_app_json() {
 /* ################################ helpers ################################ */
 /* ######################################################################### */
 //#region
-function get_current_app() {
-    launch_task('AutoInput UI Query', higher_prio);
+async function get_current_app() {
+    await launch_task('AutoInput UI Query', higher_prio);
     // logger(global('Return_AutoInput_UI_Query'))
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
     return ai
@@ -188,6 +185,7 @@ function unix_to_time(unix_ts) {
 }
 
 function create_logger(path) {
+    writeFile(path, '', false);
     return function(msg) {
         var date = new Date(); 
         let hours = '0' + date.getHours();
