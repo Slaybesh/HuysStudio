@@ -142,6 +142,7 @@ async function get_app_json() {
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
     logger('get_app_json: ' + elapsed(t0));
+    logger('app_json_str: ' + app_json_str);
     return app_json
 }
 //#endregion
@@ -152,7 +153,7 @@ async function get_app_json() {
 //#region
 
 function elapsed(start_time) {
-    return String(parseInt(performance.now() - start_time) / 1000) + 'ms';
+    return String(parseInt(performance.now() - start_time) / 1000) + ' sec';
 }
 async function get_current_app() {
     let t0 = performance.now();
