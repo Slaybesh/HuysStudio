@@ -41,7 +41,7 @@ async function app_blocker(blocked=false) {
     do {
         app.last_used = TIMES();
 
-        ai = await get_current_app();
+        ai = get_current_app();
         logger('ai.package: ' + ai.package);
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
@@ -143,7 +143,7 @@ function get_app_json() {
 /* ######################################################################### */
 //#region
 async function get_current_app() {
-    await launch_task('AutoInput UI Query', higher_prio);
+    await launch_task('AutoInput UI Query');
     // logger(global('Return_AutoInput_UI_Query'))
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
     return ai
