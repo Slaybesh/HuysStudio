@@ -152,7 +152,7 @@ async function get_app_json() {
 //#region
 
 function elapsed(start_time) {
-    return String(parseInt(performance.now() - get_app_time));
+    return String(parseInt(performance.now() - start_time));
 }
 async function get_current_app() {
     await launch_task('AutoInput UI Query');
