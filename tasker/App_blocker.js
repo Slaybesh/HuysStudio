@@ -20,7 +20,7 @@ async function app_blocker(blocked=false) {
         exit();
     }
 
-    let app = get_app_json();
+    let app = await get_app_json();
     
     if (app.blocked_until > TIMES()) {
         // show_ui(app);
@@ -41,7 +41,7 @@ async function app_blocker(blocked=false) {
     do {
         app.last_used = TIMES();
 
-        ai = get_current_app();
+        ai = await get_current_app();
         logger('ai.package: ' + ai.package);
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
@@ -108,7 +108,7 @@ function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    let ai = get_current_app();
+    let ai = await get_current_app();
 
     let package_var = ai.package.replace(/\./g, '_');
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
