@@ -1,12 +1,33 @@
 const logger = create_logger('Tasker/log/performTask.txt');
 
+var par1;
+eval(par1 + '()')
 
-async function func() {
-    logger('before task');
+function normal() {
+    logger('before normal');
     performTask('Slow Task');
-    logger('after task');
+    logger('after normal');
 }
-func()
+
+async function await_normal() {
+    logger('before await_normal');
+    await performTask('Slow Task');
+    logger('after await_normal');
+}
+
+async function launch() {
+    logger('before launch');
+    launch_task('Slow Task');
+    logger('after launch');
+}
+
+async function await_launch() {
+    logger('before await_launch');
+    await launch_task('Slow Task');
+    logger('after await_launch');
+}
+
+
 
 async function launch_task(task_name) {
     logger('launching: ' + task_name)
