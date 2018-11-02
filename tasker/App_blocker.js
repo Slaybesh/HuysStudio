@@ -53,18 +53,22 @@ async function app_blocker(blocked=false) {
         
         // await sleep(500);
         ai = await get_current_app();
-        t0 = performance.now();
         setGlobal(app.package_var, JSON.stringify(app, null, 2));
-        logger('setglobal: ' + elapsed(t0));
 
         if (app.dur > app.max_dur) {
             show_ui(app);
             reset_vars(app);
             break
         }
-        app.dur = app.dur + (TIMES() - app.last_used);
 
-    } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1);
+
+        if ([app.package, 'com.android.systemui'].indexOf(ai.package) != -1) {
+            /* only add to duration if in app or system ui */
+            app.dur = app.dur + (TIMES() - app.last_used);
+        }
+
+    } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].includes(ai.package) && 
+             global('TRUN').includes('App Blocker'));
     
     
     performTask('Notification.cancel', higher_prio, app.name);
@@ -206,19 +210,21 @@ function unix_to_time(unix_ts) {
     return time
 }
 
-function create_logger(path) {
+function create_logger(path, debugging=true) {
     writeFile(path, '', false);
     return function(msg) {
-        var date = new Date(); 
-        let hours = '0' + date.getHours();
-        let min = '0' + date.getMinutes();
-        let sec = '0' + date.getSeconds();
-        let ms = '00' + date.getMilliseconds();
-        let time = hours.substr(-2) + ":" 
-                 + min.substr(-2) + ":" 
-                 + sec.substr(-2) + ":" 
-                 + ms.substr(-3);
-        writeFile(path, `${time}    ${msg}\n`, true);
+        if (debugging) {
+            var date = new Date(); 
+            let hours = '0' + date.getHours();
+            let min = '0' + date.getMinutes();
+            let sec = '0' + date.getSeconds();
+            let ms = '00' + date.getMilliseconds();
+            let time = hours.substr(-2) + ":" 
+                     + min.substr(-2) + ":" 
+                     + sec.substr(-2) + ":" 
+                     + ms.substr(-3);
+            writeFile(path, `${time}    ${msg}\n`, true);
+        }
     }
 }
 //#endregion
