@@ -84,8 +84,8 @@ function reset_vars(app) {
 }
 
 function show_ui(app, blocked=false) {
-    // destroyScene('App_blocker_ui');
-    // createScene('App_blocker_ui');
+    destroyScene('App_blocker_ui');
+    createScene('App_blocker_ui');
 
     let curr_time = TIMES();
     
@@ -108,7 +108,7 @@ function show_ui(app, blocked=false) {
     }
     
     elemText('App_blocker_ui', 'information', 'repl', information);
-    elemVisibility('App_blocker_ui', 'Dismiss', true);
+    // elemVisibility('App_blocker_ui', 'Dismiss', true);
     showScene('App_blocker_ui', 'ActivityFullWindow', 0, 0, false, false);
 }
 
