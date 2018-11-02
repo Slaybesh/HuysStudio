@@ -17,18 +17,18 @@ async function app_blocker(blocked=false) {
     performTask('regular_checks', higher_prio);
 
     if (blocked) {
-        // show_ui(app, blocked);
+        show_ui(app, blocked);
         exit();
     }
 
     let app = await get_app_json();
     
     if (app.blocked_until > TIMES()) {
-        // show_ui(app);
+        show_ui(app);
         logger('blocked');
         exit();
     } else if (app.freq > app.max_freq) {
-        // show_ui(app);
+        show_ui(app);
         logger('max freq');
         reset_vars(app);
         exit();
@@ -38,7 +38,7 @@ async function app_blocker(blocked=false) {
     }
 
     app.freq = app.freq + 1;
-    // show_ui(app);
+    show_ui(app);
 
     let ai;
 
@@ -54,7 +54,7 @@ async function app_blocker(blocked=false) {
         // await sleep(500);
         ai = await get_current_app();
         if (app.dur > app.max_dur) {
-            // show_ui(app);
+            show_ui(app);
             reset_vars(app);
             break
         }
