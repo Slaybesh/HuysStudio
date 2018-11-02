@@ -49,7 +49,7 @@ async function app_blocker(blocked=false) {
 
         // logger('ai.package: ' + ai.package);
         performTask('Notification.create', higher_prio,
-                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
+                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|3`);
         
         // await sleep(500);
         ai = await get_current_app();
@@ -84,8 +84,8 @@ function reset_vars(app) {
 }
 
 function show_ui(app, blocked=false) {
-    destroyScene('App_blocker_ui');
-    createScene('App_blocker_ui');
+    // destroyScene('App_blocker_ui');
+    // createScene('App_blocker_ui');
 
     let curr_time = TIMES();
     
@@ -108,6 +108,7 @@ function show_ui(app, blocked=false) {
     }
     
     elemText('App_blocker_ui', 'information', 'repl', information);
+    elemVisibility('App_blocker_ui', 'Dismiss', true);
     showScene('App_blocker_ui', 'ActivityFullWindow', 0, 0, false, false);
 }
 
