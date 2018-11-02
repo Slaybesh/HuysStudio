@@ -104,7 +104,7 @@ function show_ui(app, blocked=false) {
     showScene('App_blocker_ui', 'ActivityFullWindow', 0, 0, false, false);
 }
 
-function get_app_json() {
+async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
