@@ -13,7 +13,7 @@ var par1;
 app_blocker(par1);
 async function app_blocker(blocked=false) {
 
-    let t0 = performance.now();
+    let start_time = performance.now();
     performTask('regular_checks', higher_prio);
 
     if (blocked) {
@@ -40,9 +40,10 @@ async function app_blocker(blocked=false) {
 
     let ai;
 
-    logger('start part: ' + performance.now() - t0)
+    logger('start part: ' + performance.now() - start_time)
+    let loop_time;
     do {
-        t0 = performance.now()
+        loop_time = performance.now()
         app.last_used = TIMES();
 
         // logger('ai.package: ' + ai.package);
@@ -57,7 +58,8 @@ async function app_blocker(blocked=false) {
             break
         }
         app.dur = app.dur + (TIMES() - app.last_used);
-        logger('start part: ' + performance.now() - t0)
+        logger('start part: ' + performance.now() - loop_time);
+
     } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1);
     
     
@@ -112,7 +114,7 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    let t0 = performance.now();
+    let get_app_time = performance.now();
 
     let ai = await get_current_app();
 
@@ -140,7 +142,7 @@ async function get_app_json() {
         }
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
-    logger('get_app_json: ' + performance.now() - t0)
+    logger('get_app_json: ' + performance.now() - get_app_time)
     return app_json
 }
 //#endregion
