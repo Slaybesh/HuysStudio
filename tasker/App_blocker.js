@@ -43,7 +43,7 @@ async function app_blocker(blocked=false) {
     do {
         app.last_used = TIMES();
 
-        ai = get_current_app();
+        ai = await get_current_app();
         logger('ai.package: ' + ai.package);
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
@@ -58,11 +58,6 @@ async function app_blocker(blocked=false) {
         }
     } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1);
 
-    // logger(ai.package);
-    // logger(app.package);
-        if ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1) {
-        logger('yes');
-    }
 
     setGlobal(app.package_var, JSON.stringify(app, null, 2));
     performTask('Notification.cancel', higher_prio, app.name);
@@ -70,7 +65,10 @@ async function app_blocker(blocked=false) {
     exit();
 }
 
-
+/* ##################################################################################### */
+/* ################################ app_blocker helpers ################################ */
+/* ##################################################################################### */
+//#region
 function reset_vars(app) {
 
     app.dur = 0;
@@ -80,7 +78,6 @@ function reset_vars(app) {
     
     performTask('Notification.snooze');
 }
-
 
 function show_ui(app, blocked=false) {
     destroyScene('App_blocker_ui');
@@ -109,12 +106,6 @@ function show_ui(app, blocked=false) {
     elemText('App_blocker_ui', 'information', 'repl', information);
     showScene('App_blocker_ui', 'ActivityFullWindow', 0, 0, false, false);
 }
-
-
-/* ######################################################################### */
-/* ################################ helpers ################################ */
-/* ######################################################################### */
-//
 
 function get_app_json() {
     /* vars_str is a JSON string containing 
@@ -148,7 +139,12 @@ function get_app_json() {
     }
     return app_json
 }
+//#endregion
 
+/* ######################################################################### */
+/* ################################ helpers ################################ */
+/* ######################################################################### */
+//#region
 function get_current_app() {
     launch_task('AutoInput UI Query', higher_prio);
     // logger(global('Return_AutoInput_UI_Query'))
@@ -205,3 +201,4 @@ function create_logger(path) {
         writeFile(path, `${time}    ${msg}\n`, true);
     }
 }
+//#endregion
