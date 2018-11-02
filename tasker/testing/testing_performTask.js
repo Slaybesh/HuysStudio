@@ -1,7 +1,8 @@
 const logger = create_logger('Tasker/log/performTask.txt');
 
-var par1;
-eval(par1 + '()')
+var fct;
+flash(fct);
+eval(fct);
 
 function normal() {
     logger('before normal');
