@@ -53,7 +53,9 @@ async function app_blocker(blocked=false) {
         
         // await sleep(500);
         ai = await get_current_app();
+        t0 = performance.now();
         setGlobal(app.package_var, JSON.stringify(app, null, 2));
+        elapsed(t0)
 
         if (app.dur > app.max_dur) {
             show_ui(app);
