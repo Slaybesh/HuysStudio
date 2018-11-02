@@ -49,7 +49,7 @@ async function app_blocker(blocked=false) {
 
         // logger('ai.package: ' + ai.package);
         performTask('Notification.create', higher_prio,
-                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|3`);
+                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
         // await sleep(500);
         ai = await get_current_app();
