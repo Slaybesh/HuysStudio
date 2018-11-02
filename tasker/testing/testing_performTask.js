@@ -1,3 +1,5 @@
+function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
+
 const logger = create_logger('Tasker/log/performTask.txt');
 
 var fct;
@@ -38,7 +40,10 @@ async function launch_task(task_name) {
     logger('launching: ' + task_name)
     
     performTask(task_name);
-    while (global('TRUN').includes(task_name)) {await sleep(100)}
+    while (global('TRUN').includes(task_name)) {
+        logger('waiting for ' + task_name);
+        await sleep(100);
+    }
 
     logger('finishing: ' + task_name)
 }
