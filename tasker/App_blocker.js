@@ -152,7 +152,7 @@ async function get_app_json() {
 //#region
 
 function elapsed(start_time) {
-    return String(parseInt(performance.now() - start_time));
+    return String(parseInt(performance.now() - start_time) / 1000) + 'ms';
 }
 async function get_current_app() {
     let t0 = performance.now();
