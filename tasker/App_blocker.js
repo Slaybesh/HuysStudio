@@ -25,9 +25,11 @@ async function app_blocker(blocked=false) {
     
     if (app.blocked_until > TIMES()) {
         // show_ui(app);
+        logger('blocked');
         exit();
     } else if (app.freq > app.max_freq) {
         // show_ui(app);
+        logger('max freq');
         reset_vars(app);
         exit();
     } else if (TIMES() - app.last_used > app.reset_time) {
