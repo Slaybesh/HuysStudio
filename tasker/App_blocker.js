@@ -49,7 +49,7 @@ async function app_blocker(blocked=false) {
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
-        await sleep(500);
+        // await sleep(500);
         ai = await get_current_app();
         if (app.dur > app.max_dur) {
             // show_ui(app);
@@ -64,7 +64,7 @@ async function app_blocker(blocked=false) {
     
     performTask('Notification.cancel', higher_prio, app.name);
     setGlobal(app.package_var, JSON.stringify(app, null, 2));
-    logger('out of app\n');
+    logger('out of app');
     exit();
 }
 
@@ -155,18 +155,22 @@ function elapsed(start_time) {
     return String(parseInt(performance.now() - start_time));
 }
 async function get_current_app() {
+    let t0 = performance.now();
     await launch_task('AutoInput UI Query');
     // logger(global('Return_AutoInput_UI_Query'))
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
+    logger('get_current_app: ' + elapsed(t0));
     return ai
 }
 
 async function launch_task(task_name) {
     // logger('launching: ' + task_name)
-    
+    let t0 = performance.now();
+
     performTask(task_name, higher_prio);
     while (global('TRUN').includes(task_name)) {await sleep(100)}
 
+    logger('launch_task ' + task_name + ': ' + elapsed(t0));
     // logger('finishing: ' + task_name)
 }
 
