@@ -1,5 +1,6 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
+const higher_prio = parseInt(priority) + 1;
 const logger = create_logger('Tasker/log/performTask.txt');
 
 var fct;
@@ -8,14 +9,14 @@ eval(fct);
 
 function normal() {
     logger('before normal');
-    performTask('Slow Task');
+    performTask('Slow Task', higher_prio);
     logger('after normal');
     exit();
 }
 
 async function await_normal() {
     logger('before await_normal');
-    await performTask('Slow Task');
+    await performTask('Slow Task', higher_prio);
     logger('after await_normal');
     exit();
 }
@@ -39,7 +40,7 @@ async function await_launch() {
 async function launch_task(task_name) {
     logger('launching: ' + task_name)
     
-    performTask(task_name);
+    performTask(task_name, higher_prio);
     while (global('TRUN').includes(task_name)) {
         logger(global('TRUN'));
         logger('waiting for ' + task_name);
