@@ -44,7 +44,7 @@ async function app_blocker(blocked=false) {
 
     logger('start part: ' + elapsed(t0));
     do {
-        t0 = performance.now()
+
         app.last_used = TIMES();
 
         // logger('ai.package: ' + ai.package);
@@ -59,7 +59,6 @@ async function app_blocker(blocked=false) {
             break
         }
         app.dur = app.dur + (TIMES() - app.last_used);
-        logger('loop part: ' + elapsed(t0));
 
     } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1);
     
