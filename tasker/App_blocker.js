@@ -152,7 +152,7 @@ async function get_current_app() {
 async function launch_task(task_name) {
     logger('launching: ' + task_name)
     
-    performTask(task_name);
+    performTask(task_name, higher_prio);
     while (global('TRUN').includes(task_name)) {await sleep(100)}
 
     logger('finishing: ' + task_name)
