@@ -12,7 +12,8 @@ let Pomo_until = () => {return parseInt(global('Pomo_until'))}
 var par1;
 app_blocker(par1);
 async function app_blocker(blocked=false) {
-        
+
+    let t0 = performance.now();
     performTask('regular_checks', higher_prio);
 
     if (blocked) {
@@ -38,27 +39,30 @@ async function app_blocker(blocked=false) {
     // show_ui(app);
 
     let ai;
+
+    logger('start part: ' + performance.now() - t0)
     do {
+        t0 = performance.now()
         app.last_used = TIMES();
 
-        ai = await get_current_app();
-        logger('ai.package: ' + ai.package);
+        // logger('ai.package: ' + ai.package);
         performTask('Notification.create', higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
-
         await sleep(500);
-        app.dur = app.dur + (TIMES() - app.last_used);
+        ai = await get_current_app();
         if (app.dur > app.max_dur) {
             // show_ui(app);
             reset_vars(app);
             break
         }
+        app.dur = app.dur + (TIMES() - app.last_used);
+        logger('start part: ' + performance.now() - t0)
     } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1);
-
-
-    setGlobal(app.package_var, JSON.stringify(app, null, 2));
+    
+    
     performTask('Notification.cancel', higher_prio, app.name);
+    setGlobal(app.package_var, JSON.stringify(app, null, 2));
     logger('out of app\n');
     exit();
 }
@@ -108,6 +112,8 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
+    let t0 = performance.now();
+
     let ai = await get_current_app();
 
     let package_var = ai.package.replace(/\./g, '_');
@@ -134,6 +140,7 @@ async function get_app_json() {
         }
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
+    logger('get_app_json: ' + performance.now() - t0)
     return app_json
 }
 //#endregion
@@ -150,12 +157,12 @@ async function get_current_app() {
 }
 
 async function launch_task(task_name) {
-    logger('launching: ' + task_name)
+    // logger('launching: ' + task_name)
     
     performTask(task_name, higher_prio);
     while (global('TRUN').includes(task_name)) {await sleep(100)}
 
-    logger('finishing: ' + task_name)
+    // logger('finishing: ' + task_name)
 }
 
 function time_left_string(curr_time, future_time) {
