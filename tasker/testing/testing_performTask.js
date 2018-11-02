@@ -7,24 +7,28 @@ function normal() {
     logger('before normal');
     performTask('Slow Task');
     logger('after normal');
+    exit();
 }
 
 async function await_normal() {
     logger('before await_normal');
     await performTask('Slow Task');
     logger('after await_normal');
+    exit();
 }
 
 async function launch() {
     logger('before launch');
     launch_task('Slow Task');
     logger('after launch');
+    exit();
 }
 
 async function await_launch() {
     logger('before await_launch');
     await launch_task('Slow Task');
     logger('after await_launch');
+    exit();
 }
 
 
