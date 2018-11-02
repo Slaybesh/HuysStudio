@@ -40,7 +40,7 @@ async function app_blocker(blocked=false) {
 
     let ai;
 
-    logger('start part: ' + performance.now() - start_time)
+    logger('start part: ' + String(performance.now() - start_time));
     let loop_time;
     do {
         loop_time = performance.now()
@@ -58,7 +58,7 @@ async function app_blocker(blocked=false) {
             break
         }
         app.dur = app.dur + (TIMES() - app.last_used);
-        logger('start part: ' + performance.now() - loop_time);
+        logger('start part: ' + String(performance.now() - loop_time));
 
     } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].indexOf(ai.package) != -1);
     
@@ -142,7 +142,7 @@ async function get_app_json() {
         }
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
-    logger('get_app_json: ' + performance.now() - get_app_time)
+    logger('get_app_json: ' + String(performance.now() - get_app_time));
     return app_json
 }
 //#endregion
