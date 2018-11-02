@@ -41,6 +41,7 @@ async function launch_task(task_name) {
     
     performTask(task_name);
     while (global('TRUN').includes(task_name)) {
+        logger(global('TRUN'));
         logger('waiting for ' + task_name);
         await sleep(100);
     }
