@@ -35,6 +35,7 @@ async function remove_persistent() {
     logger('start remove_persistent')
     let persistent_apps = JSON.parse(global('Apps_persistent'));
     for (i in persistent_apps) {
+        logger(`Snooze app: ${persistent_apps[i]}`)
         performTask('Notification.snooze', 
             parseInt(priority) + 1, persistent_apps[i], 10000000000000);
     }
