@@ -37,7 +37,8 @@ async function remove_persistent() {
     for (i in persistent_apps) {
         logger(`Snooze app: ${persistent_apps[i]}`)
         performTask('Notification.snooze', 
-            parseInt(priority) + 1, persistent_apps[i], '10000000000000');
+            parseInt(priority) + 1, persistent_apps[i], 1000);
+            // parseInt(priority) + 1, persistent_apps[i], '10000000000000');
     }
     logger('end remove_persistent')
 }
