@@ -186,10 +186,10 @@ class UI {
 
         logger('set information')
         elemText(this.ui, 'information', 'repl', information)
-        logger('create math question')
-        await this.createMathExercise(difficulty)
         logger('show scene')
         showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
+        logger('create math question')
+        this.createMathExercise(difficulty)
     }
 
     createMathExercise(difficulty) {
