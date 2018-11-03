@@ -162,8 +162,8 @@ class UI {
     
     showElements() {
 
+        elemVisibility(this.ui, 'Loading', false, 200)
         elemVisibility(this.ui, 'Information', true, 300)
-        elemVisibility(this.ui, 'Loading', false, 300)
         if (this.blocked) {
             elemVisibility(this.ui, 'Blocked Button', true, 300)
         } else {
