@@ -38,15 +38,17 @@ async function app_blocker(blocked=false) {
     } else if (glob.TIMES - app.last_used > app.reset_time) {
         app.dur = 0;
         app.freq = 0;
+    } else {
+        app.freq = app.freq + 1;
+        ui.load(app)
     }
 
-    app.freq = app.freq + 1;
-    ui.load(app)
 
-    let ai;
+    let ai = await get_current_app();
 
     logger('start part: ' + elapsed(t0));
-    do {
+    let loop_packages = [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'];
+    while (loop_packages.includes(ai.package) && global('TRUN').includes('App Blocker')) {
 
         app.last_used = glob.TIMES;
 
@@ -65,13 +67,12 @@ async function app_blocker(blocked=false) {
         }
 
 
-        if ([app.package, 'com.android.systemui'].indexOf(ai.package) != -1) {
+        if ([app.package, 'com.android.systemui'].includes(ai.package)) {
             /* only add to duration if in app or system ui */
             app.dur = app.dur + (glob.TIMES - app.last_used);
         }
 
-    } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].includes(ai.package) && 
-             global('TRUN').includes('App Blocker'));
+    }
     
     
     performTask('Notification.cancel', glob.higher_prio, app.name);
@@ -153,15 +154,24 @@ class UI {
     constructor(blocked=false) {
         
         this.blocked = blocked;
-        this.ui = blocked ? 'app_blocked' : 'app';
+        this.ui = 'app'
 
-        logger(`ui: ${this.ui}`)
         // destroyScene(this.ui)
         // createScene(this.ui)
-        elemVisibility(this.ui, 'Dismiss', true, 300)
         // showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
     }
+    
+    showElements() {
 
+        elemVisibility(this.ui, 'Loading', false, 300)
+        elemVisibility(this.ui, 'Not Blocked Button', true, 300)
+        elemVisibility(this.ui, 'Blocked', true, 300)
+        elemVisibility(this.ui, 'Time Left', true, 300)
+        elemVisibility(this.ui, 'Times Used', true, 300)
+        elemVisibility(this.ui, 'Math Input', true, 300)
+        elemVisibility(this.ui, 'Math Question', true, 300)
+        
+    }
     load(app) {
         let curr_time = glob.TIMES;
         let Pomo_until = glob.Pomo_until;
