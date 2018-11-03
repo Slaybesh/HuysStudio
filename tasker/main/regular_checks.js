@@ -44,6 +44,7 @@ async function remove_persistent() {
 async function roundr() {
     logger('start roundr')
     let id_roundr = shell("echo proc/$(pidof mohammad.adib.roundr) | cut -f 2 -d '/'", true);
+    logger(`id_roundr: ${id_roundr}`)
     if (!id_roundr.match(/[0-9]+/)) {
         loadApp('Roundr', '', true);
         await sleep(100);

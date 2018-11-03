@@ -28,13 +28,11 @@ async function app_blocker(blocked=false) {
     
     if (app.blocked_until > glob.TIMES) {
         ui.load(app);
-        // logger('blocked');
-        exit();
+        logger('blocked');
     } else if (app.freq > app.max_freq) {
         ui.load(app);
-        // logger('max freq');
+        logger('max freq');
         reset_vars(app);
-        exit();
     } else if (glob.TIMES - app.last_used > app.reset_time) {
         app.dur = 0;
         app.freq = 0;
@@ -46,8 +44,8 @@ async function app_blocker(blocked=false) {
 
     let ai = await get_current_app();
 
-    logger('start part: ' + elapsed(t0));
     let loop_packages = [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'];
+    logger('start part: ' + elapsed(t0));
     while (loop_packages.includes(ai.package) && global('TRUN').includes('App Blocker')) {
 
         app.last_used = glob.TIMES;
@@ -155,6 +153,7 @@ class UI {
         
         this.blocked = blocked;
         this.ui = 'app'
+        
 
         // destroyScene(this.ui)
         // createScene(this.ui)
@@ -163,13 +162,17 @@ class UI {
     
     showElements() {
 
+        elemVisibility(this.ui, 'Information', true, 300)
         elemVisibility(this.ui, 'Loading', false, 300)
-        elemVisibility(this.ui, 'Not Blocked Button', true, 300)
-        elemVisibility(this.ui, 'Blocked', true, 300)
-        elemVisibility(this.ui, 'Time Left', true, 300)
-        elemVisibility(this.ui, 'Times Used', true, 300)
-        elemVisibility(this.ui, 'Math Input', true, 300)
-        elemVisibility(this.ui, 'Math Question', true, 300)
+        if (this.blocked) {
+            elemVisibility(this.ui, 'Blocked Button', true, 300)
+        } else {
+            elemVisibility(this.ui, 'Math Input', true, 300)
+            elemVisibility(this.ui, 'Math Question', true, 300)
+            elemVisibility(this.ui, 'Not Blocked Button', true, 300)
+        }
+        // elemVisibility(this.ui, 'Time Left', true, 300)
+        // elemVisibility(this.ui, 'Times Used', true, 300)
         
     }
     load(app) {
@@ -201,11 +204,12 @@ class UI {
             }
         }
 
-        logger('set information')
-        elemText(this.ui, 'information', 'repl', information)
+        logger('set Information')
+        elemText(this.ui, 'Information', 'repl', information)
         logger('show scene')
         logger('create math question')
         this.createMathExercise(difficulty)
+        this.showElements()
     }
 
     createMathExercise(difficulty) {
