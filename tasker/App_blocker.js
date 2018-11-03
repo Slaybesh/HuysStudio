@@ -152,7 +152,7 @@ class UI {
         this.blocked = blocked;
         this.ui = blocked ? 'app_blocked' : 'app';
 
-        logger(`ui: ${ui}`)
+        logger(`ui: ${this.ui}`)
         destroyScene(this.ui)
         createScene(this.ui)
     }
