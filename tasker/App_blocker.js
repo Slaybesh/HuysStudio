@@ -196,6 +196,8 @@ class UI {
         }
 
         let range;
+        let small_range;
+        let big_range;
         switch(difficulty) {
             case 0:
                 small_range = [3, 9];
