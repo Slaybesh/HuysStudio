@@ -21,13 +21,13 @@ function create_logger(path, debugging=true) {
 logger = create_logger('Tasker/log/regular_checks.txt');
 
 async function regular_checks() {
-    await remove_persistent();
     logger('start regular_checks')
+    await roundr();
     shell('settings put secure enabled_accessibility_services' + global('Accessibility_services'));
     performTask('Zooper Disengaged');
     performTask('Zooper Reload Location');
     logger('end regular_checks')
-    await roundr();
+    await remove_persistent();
     exit();
 }
 
@@ -35,7 +35,9 @@ async function remove_persistent() {
     logger('start remove_persistent')
     let persistent_apps = JSON.parse(global('Apps_persistent'));
     for (i in persistent_apps) {
-        performTask('Notification.snooze', parseInt(priority) + 1, persistent_apps[i], 10000000000000);
+        let ok = performTask('Notification.snooze', 
+                    parseInt(priority) + 1, persistent_apps[i], 10000000000000);
+        logger('remove_persistent performTask ok = ' + ok)
     }
     logger('end remove_persistent')
 }
