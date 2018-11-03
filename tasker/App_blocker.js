@@ -185,8 +185,9 @@ class UI {
                 difficulty = 1;
             } else {
                 let time_left = time_left_string(app.dur, app.max_dur);
-                information = `Time left: ${time_left}\n\n
-                               Times opened: ${app.freq} out of ${app.max_freq}`
+                information = `
+                Time left: ${time_left}\n\n
+                Times opened: ${app.freq} out of ${app.max_freq}`;
                 difficulty = 0;
             }
         }
