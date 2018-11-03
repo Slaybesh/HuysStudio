@@ -20,18 +20,18 @@ async function app_blocker(blocked=false) {
     let ui = new UI(blocked);
 
     if (blocked) {
-        ui.show(app);
+        ui.load(app);
         exit();
     }
 
     let app = await get_app_json();
     
     if (app.blocked_until > glob.TIMES) {
-        ui.show(app);
+        ui.load(app);
         // logger('blocked');
         exit();
     } else if (app.freq > app.max_freq) {
-        ui.show(app);
+        ui.load(app);
         // logger('max freq');
         reset_vars(app);
         exit();
@@ -41,7 +41,7 @@ async function app_blocker(blocked=false) {
     }
 
     app.freq = app.freq + 1;
-    ui.show(app)
+    ui.load(app)
 
     let ai;
 
@@ -59,7 +59,7 @@ async function app_blocker(blocked=false) {
         setGlobal(app.package_var, JSON.stringify(app, null, 2));
 
         if (app.dur > app.max_dur) {
-            ui.show(app)
+            ui.load(app)
             reset_vars(app);
             break
         }
@@ -90,9 +90,12 @@ async function get_app_json() {
 
     let t0 = performance.now();
 
-    let ai = await get_current_app();
+    // let ai = await get_current_app();
+    // let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
 
-    let package_var = ai.package.replace(/\./g, '_');
+    logger('var aipackage = ' + aipackage)
+    let package_var = aipackage.replace(/\./g, '_');
+    // let package_var = ai.package.replace(/\./g, '_');
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     let app_json_str = global(package_var);
@@ -153,12 +156,13 @@ class UI {
         this.ui = blocked ? 'app_blocked' : 'app';
 
         logger(`ui: ${this.ui}`)
-        destroyScene(this.ui)
-        createScene(this.ui)
+        // destroyScene(this.ui)
+        // createScene(this.ui)
+        elemVisibility(this.ui, 'Dismiss', true, 2000)
+        // showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
     }
 
-
-    async show(app) {
+    load(app) {
         let curr_time = glob.TIMES;
         let Pomo_until = glob.Pomo_until;
         let Disengaged_until = glob.Disengaged_until;
@@ -189,7 +193,6 @@ class UI {
         logger('set information')
         elemText(this.ui, 'information', 'repl', information)
         logger('show scene')
-        showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
         logger('create math question')
         this.createMathExercise(difficulty)
     }
@@ -327,5 +330,6 @@ function create_logger(path, debugging=true) {
 }
 //#endregion
 
+var aipackage;
 var par1;
 app_blocker(par1);
