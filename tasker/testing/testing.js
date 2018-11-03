@@ -1,12 +1,16 @@
-var ts = Math.round((new Date()).getTime() / 1000);
-var date = new Date(ts*1000);
-// Hours part from the timestamp
-var hours = date.getHours();
-// Minutes part from the timestamp
-var minutes = "0" + date.getMinutes();
-// Seconds part from the timestamp
-var seconds = "0" + date.getSeconds();
+let round_up = (rounding_num, round_to) => {
 
-// Will display time in 10:30:23 format
-var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-console.log(formattedTime)
+    return rounding_num % round_to == 0 ? rounding_num : rounding_num + round_to - rounding_num % round_to
+
+    // let num;
+    // if (rounding_num % round_to == 0) {
+    //     num = rounding_num;
+    // } else {
+    //     num = rounding_num + round_to - rounding_num % round_to;
+    // }
+    // return num
+
+
+}
+
+console.log(round_up(39, 10))

@@ -3,52 +3,57 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 const logger = create_logger('Tasker/log/app_blocker.txt');
 
-const higher_prio = parseInt(priority) + 1;
-let TIMES = () => {return parseInt(global('TIMES'))}
-let Disengaged_until = () => {return parseInt(global('Disengaged_until'))}
-let Disengaged = () => {return parseInt(global('Disengaged'))}
-let Pomo_until = () => {return parseInt(global('Pomo_until'))}
+let glob = {
+    higher_prio: parseInt(priority) + 1,
+    get TIMES() {return parseInt(global('TIMES'))},
+    get Disengaged() {return parseInt(global('Disengaged'))},
+    get Disengaged_until() {return parseInt(global('Disengaged_until'))},
+    get Pomo_until() {return parseInt(global('Pomo_until'))}
+}
+
 
 var par1;
 app_blocker(par1);
 async function app_blocker(blocked=false) {
 
     let t0 = performance.now();
-    performTask('regular_checks', higher_prio);
+    performTask('regular_checks', glob.higher_prio);
+
+    let ui = new UI('app', blocked)
 
     if (blocked) {
-        show_ui(app, blocked);
+        ui.show(app);
         exit();
     }
 
     let app = await get_app_json();
     
-    if (app.blocked_until > TIMES()) {
-        show_ui(app);
-        logger('blocked');
+    if (app.blocked_until > glob.TIMES) {
+        ui.show(app);
+        // logger('blocked');
         exit();
     } else if (app.freq > app.max_freq) {
-        show_ui(app);
-        logger('max freq');
+        ui.show(app);
+        // logger('max freq');
         reset_vars(app);
         exit();
-    } else if (TIMES() - app.last_used > app.reset_time) {
+    } else if (glob.TIMES - app.last_used > app.reset_time) {
         app.dur = 0;
         app.freq = 0;
     }
 
     app.freq = app.freq + 1;
-    show_ui(app);
+    ui.show(app)
 
     let ai;
 
     logger('start part: ' + elapsed(t0));
     do {
 
-        app.last_used = TIMES();
+        app.last_used = glob.TIMES;
 
         // logger('ai.package: ' + ai.package);
-        performTask('Notification.create', higher_prio,
+        performTask('Notification.create', glob.higher_prio,
                     `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
         
         // await sleep(500);
@@ -56,7 +61,7 @@ async function app_blocker(blocked=false) {
         setGlobal(app.package_var, JSON.stringify(app, null, 2));
 
         if (app.dur > app.max_dur) {
-            show_ui(app);
+            ui.show(app)
             reset_vars(app);
             break
         }
@@ -64,14 +69,14 @@ async function app_blocker(blocked=false) {
 
         if ([app.package, 'com.android.systemui'].indexOf(ai.package) != -1) {
             /* only add to duration if in app or system ui */
-            app.dur = app.dur + (TIMES() - app.last_used);
+            app.dur = app.dur + (glob.TIMES - app.last_used);
         }
 
     } while ([app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'].includes(ai.package) && 
              global('TRUN').includes('App Blocker'));
     
     
-    performTask('Notification.cancel', higher_prio, app.name);
+    performTask('Notification.cancel', glob.higher_prio, app.name);
     setGlobal(app.package_var, JSON.stringify(app, null, 2));
     logger('out of app');
     exit();
@@ -81,45 +86,6 @@ async function app_blocker(blocked=false) {
 /* ################################ app_blocker helpers ################################ */
 /* ##################################################################################### */
 //#region
-function reset_vars(app) {
-
-    app.dur = 0;
-    app.freq = 0;
-    app.blocked_until = TIMES() + app.reset_time;
-    setGlobal(app.package_var, JSON.stringify(app, null, 2));
-    
-    performTask('Notification.snooze');
-}
-
-function show_ui(app, blocked=false) {
-    destroyScene('App_blocker_ui');
-    createScene('App_blocker_ui');
-
-    let curr_time = TIMES();
-    
-    let information = '';
-    if (blocked) {
-        if (Pomo_until() > curr_time) {
-            information = 'Currently in Pomo Session.\nCome back at ' + unix_to_time(Pomo_until());
-        } else if (Disengaged_until() > curr_time) {
-            information = 'Currently Disengaged.\nCome back at ' + unix_to_time(Disengaged_until());
-        } else if (Disengaged()) {
-            information = 'Currently Disengaged.\nCome back tomorrow.';
-        }
-    } else {
-        if (app.blocked_until > curr_time) {
-            information = 'Currently blocked.\nCome back at ' + unix_to_time(app.blocked_until);
-        } else {
-            let time_left = time_left_string(app.dur, app.max_dur);
-            information = `Time left: ${time_left}\nTimes opened: ${app.freq}`
-        }
-    }
-    
-    elemText('App_blocker_ui', 'information', 'repl', information);
-    // elemVisibility('App_blocker_ui', 'Dismiss', true);
-    showScene('App_blocker_ui', 'ActivityFullWindow', 0, 0, false, false);
-}
-
 async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
@@ -156,16 +122,7 @@ async function get_app_json() {
     logger('app_json_str: ' + app_json_str);
     return app_json
 }
-//#endregion
 
-/* ######################################################################### */
-/* ################################ helpers ################################ */
-/* ######################################################################### */
-//#region
-
-function elapsed(start_time) {
-    return String(parseInt(performance.now() - start_time) / 1000) + ' sec';
-}
 async function get_current_app() {
     let t0 = performance.now();
     await launch_task('AutoInput UI Query');
@@ -175,14 +132,146 @@ async function get_current_app() {
     return ai
 }
 
+function reset_vars(app) {
+
+    app.dur = 0;
+    app.freq = 0;
+    app.blocked_until = glob.TIMES + app.reset_time;
+    setGlobal(app.package_var, JSON.stringify(app, null, 2));
+    
+    performTask('Notification.snooze');
+}
+//#endregion
+
+
+/* #################################################################### */
+/* ################################ UI ################################ */
+/* #################################################################### */
+//#region
+class UI {
+    constructor(ui, blocked=false) {
+        destroyScene(ui);
+        createScene(ui);
+        this.ui = ui;
+        this.blocked = blocked;
+    }
+
+
+    show(app) {
+        let curr_time = glob.TIMES;
+        let Pomo_until = glob.Pomo_until;
+        let Disengaged_until = glob.Disengaged_until;
+        let Disengaged = glob.Disengaged;
+        
+        let information = '';
+        let difficulty;
+        if (this.blocked) {
+            if (Pomo_until > curr_time) {
+                information = 'Currently in Pomo Session.\nCome back at ' + unix_to_time(Pomo_until);
+            } else if (Disengaged_until > curr_time) {
+                information = 'Currently Disengaged.\nCome back at ' + unix_to_time(Disengaged_until);
+            } else if (Disengaged) {
+                information = 'Currently Disengaged.\nCome back tomorrow.';
+            }
+            difficulty = 1;
+        } else {
+            if (app.blocked_until > curr_time) {
+                information = 'Currently blocked.\nCome back at ' + unix_to_time(app.blocked_until);
+                difficulty = 1;
+            } else {
+                let time_left = time_left_string(app.dur, app.max_dur);
+                information = `Time left: ${time_left}\nTimes opened: ${app.freq}`
+                difficulty = 0;
+            }
+        }
+
+        elemText(this.ui, 'information', 'repl', information);
+        this.createMathExercise(difficulty);
+        showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false);
+    }
+
+    createMathExercise(difficulty) {
+        let randint = (min, max) => {return Math.floor(Math.random() * (max - min + 1)) + min}
+
+        let round_up = (rounding_num, round_to) => {
+            return rounding_num % round_to == 0 ? rounding_num : rounding_num + round_to - rounding_num % round_to
+        }
+
+        let range;
+        switch(difficulty) {
+            case 0:
+                small_range = [3, 9];
+                big_range = [20, 100];
+                break;
+            case 1:
+                small_range = [9, 20];
+                big_range = [100, 4000];
+                break;
+        }
+
+        let operations = ['*', '+', '-', '/']
+        let operator = randint(0, operations.length);
+
+        let small_num1 = randint(small_range[0], small_range[1]);
+        let small_num2 = randint(small_range[0], small_range[1]);
+        let big_num1 = randint(big_range[0], big_range[1]);
+        let big_num2 = randint(big_range[0], big_range[1]);
+
+        let result;
+        let question;
+        switch(operator) {
+            case '+':
+                result = big_num1 + big_num2;
+                question = `${big_num1} + ${big_num2} = ?`
+                break;
+                
+            case '-':
+                result = big_num1 - big_num2;
+                question = `${big_num1} - ${big_num2} = ?`
+                break;
+                
+            case '*':
+                result = small_num1 * small_num2;
+                question = `${small_num1} * ${small_num2} = ?`
+                break;
+                
+            case '/':
+                bigger_num = small_num1 * small_num2;
+                result = small_num1;
+                question = `${bigger_num} / ${small_num2} = ?`
+            
+            // case '-/':
+            //     result = (max_large - min_large) / randint(2, 4);
+            //     break;
+            
+            default:
+                result = max_large + min_large;
+        }
+
+        elemText(this.ui, 'Math Question', 'repl', question);
+        elemText(this.ui, 'Math Result', 'repl', result);
+
+    }
+}
+//#endregion
+
+
+/* ######################################################################### */
+/* ################################ helpers ################################ */
+/* ######################################################################### */
+//#region
 async function launch_task(task_name) {
     // logger('launching: ' + task_name)
 
-    performTask(task_name, higher_prio);
-    while (global('TRUN').includes(task_name)) {await sleep(100)}
+    performTask(task_name, glob.higher_prio);
+    while (global('TRUN').includes(task_name)) {
+        await sleep(100)
+    }
 
     // logger('finishing: ' + task_name)
 }
+
+function elapsed(start_time) {return String(parseInt(performance.now() - start_time) / 1000) + ' sec'}
 
 function time_left_string(curr_time, future_time) {
 
