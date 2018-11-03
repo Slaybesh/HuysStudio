@@ -228,23 +228,23 @@ class UI {
         switch(operator) {
             case '+':
                 result = big_num1 + big_num2;
-                question = `${big_num1} + ${big_num2}  =`
+                question = `${big_num1} + ${big_num2}  = `
                 break;
                 
             case '-':
                 result = big_num1 - big_num2;
-                question = `${big_num1} - ${big_num2}  =`
+                question = `${big_num1} - ${big_num2}  = `
                 break;
                 
             case '*':
                 result = small_num1 * small_num2;
-                question = `${small_num1} * ${small_num2}  =`
+                question = `${small_num1} * ${small_num2}  = `
                 break;
                 
             case '/':
                 let bigger_num = small_num1 * small_num2;
                 result = small_num1;
-                question = `${bigger_num} / ${small_num2}  =`
+                question = `${bigger_num} / ${small_num2}  = `
             
             // case '-/':
             //     result = (max_large - min_large) / randint(2, 4);
