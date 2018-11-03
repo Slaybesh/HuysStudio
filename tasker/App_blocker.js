@@ -158,7 +158,7 @@ class UI {
         logger(`ui: ${this.ui}`)
         // destroyScene(this.ui)
         // createScene(this.ui)
-        elemVisibility(this.ui, 'Dismiss', true, 2000)
+        elemVisibility(this.ui, 'Dismiss', true, 100)
         // showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
     }
 
