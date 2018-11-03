@@ -21,13 +21,14 @@ function create_logger(path, debugging=true) {
 logger = create_logger('Tasker/log/regular_checks.txt');
 
 async function regular_checks() {
+    await remove_persistent();
     logger('start regular_checks')
     shell('settings put secure enabled_accessibility_services' + global('Accessibility_services'));
-    await roundr();
-    await remove_persistent();
     performTask('Zooper Disengaged');
     performTask('Zooper Reload Location');
     logger('end regular_checks')
+    await roundr();
+    exit();
 }
 
 async function remove_persistent() {
@@ -49,7 +50,4 @@ async function roundr() {
     logger('end roundr')
 }
 
-regular_checks().then(() => {
-    logger('\n')
-    exit();
-});
+regular_checks()
