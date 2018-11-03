@@ -26,8 +26,8 @@ async function regular_checks() {
     shell('settings put secure enabled_accessibility_services' + global('Accessibility_services'));
     performTask('Zooper Disengaged');
     performTask('Zooper Reload Location');
-    logger('end regular_checks')
     await remove_persistent();
+    logger('end regular_checks')
     exit();
 }
 
@@ -35,9 +35,8 @@ async function remove_persistent() {
     logger('start remove_persistent')
     let persistent_apps = JSON.parse(global('Apps_persistent'));
     for (i in persistent_apps) {
-        let ok = performTask('Notification.snooze', 
-                    parseInt(priority) + 1, persistent_apps[i], 10000000000000);
-        logger('remove_persistent performTask ok = ' + ok)
+        performTask('Notification.snooze', 
+            parseInt(priority) + 1, persistent_apps[i], 10000000000000);
     }
     logger('end remove_persistent')
 }
