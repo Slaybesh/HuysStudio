@@ -158,7 +158,7 @@ class UI {
         logger(`ui: ${this.ui}`)
         // destroyScene(this.ui)
         // createScene(this.ui)
-        elemVisibility(this.ui, 'Dismiss', true, 100)
+        elemVisibility(this.ui, 'Dismiss', true, 300)
         // showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
     }
 
@@ -185,7 +185,7 @@ class UI {
                 difficulty = 1;
             } else {
                 let time_left = time_left_string(app.dur, app.max_dur);
-                information = `Time left: ${time_left}\nTimes opened: ${app.freq}`
+                information = `Time left: ${time_left}\n\nTimes opened: ${app.freq}/${app.max_freq}`
                 difficulty = 0;
             }
         }
