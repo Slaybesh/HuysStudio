@@ -148,6 +148,7 @@ function reset_vars(app) {
 //#region
 class UI {
     constructor(ui, blocked=false) {
+        logger('init ui')
         destroyScene(ui);
         createScene(ui);
         this.ui = ui;
@@ -183,9 +184,12 @@ class UI {
             }
         }
 
-        elemText(this.ui, 'information', 'repl', information);
-        await this.createMathExercise(difficulty);
-        showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false);
+        logger('set information')
+        elemText(this.ui, 'information', 'repl', information)
+        logger('create math question')
+        await this.createMathExercise(difficulty)
+        logger('show scene')
+        showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
     }
 
     createMathExercise(difficulty) {
@@ -249,6 +253,7 @@ class UI {
             //     question = `${big_num1} + ${big_num2} = ?`
         }
 
+        logger(`question: ${question} result: ${result}`)
         elemText(this.ui, 'Math Question', 'repl', question);
         elemText(this.ui, 'Math Result', 'repl', result);
 
