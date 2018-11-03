@@ -17,7 +17,7 @@ async function app_blocker(blocked=false) {
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
 
-    let ui = new UI('app', blocked)
+    let ui = new UI('app', blocked);
 
     if (blocked) {
         ui.show(app);
@@ -155,7 +155,7 @@ class UI {
     }
 
 
-    show(app) {
+    async show(app) {
         let curr_time = glob.TIMES;
         let Pomo_until = glob.Pomo_until;
         let Disengaged_until = glob.Disengaged_until;
@@ -184,7 +184,7 @@ class UI {
         }
 
         elemText(this.ui, 'information', 'repl', information);
-        this.createMathExercise(difficulty);
+        await this.createMathExercise(difficulty);
         showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false);
     }
 
