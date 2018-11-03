@@ -17,7 +17,7 @@ async function app_blocker(blocked=false) {
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
 
-    let ui = new UI('app', blocked);
+    let ui = new UI(blocked);
 
     if (blocked) {
         ui.show(app);
@@ -147,12 +147,14 @@ function reset_vars(app) {
 /* #################################################################### */
 //#region
 class UI {
-    constructor(ui, blocked=false) {
-        logger('init ui')
-        destroyScene(ui);
-        createScene(ui);
-        this.ui = ui;
+    constructor(blocked=false) {
+        
         this.blocked = blocked;
+        this.ui = blocked ? 'app_blocked' : 'app';
+
+        logger(`ui: ${ui}`)
+        destroyScene(this.ui)
+        createScene(this.ui)
     }
 
 
@@ -214,7 +216,7 @@ class UI {
         }
 
         let operations = ['*', '+', '-', '/']
-        let operator = operations[randint(0, operations.length)]
+        let operator = operations[randint(0, operations.length - 1)]
 
         let small_num1 = randint(small_range[0], small_range[1]);
         let small_num2 = randint(small_range[0], small_range[1]);
