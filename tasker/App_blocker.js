@@ -12,8 +12,6 @@ let glob = {
 }
 
 
-var par1;
-app_blocker(par1);
 async function app_blocker(blocked=false) {
 
     let t0 = performance.now();
@@ -317,3 +315,6 @@ function create_logger(path, debugging=true) {
     }
 }
 //#endregion
+
+var par1;
+app_blocker(par1);
