@@ -244,8 +244,9 @@ class UI {
             //     result = (max_large - min_large) / randint(2, 4);
             //     break;
             
-            default:
-                result = max_large + min_large;
+            // default:
+            //     result = big_num1 + big_num2;
+            //     question = `${big_num1} + ${big_num2} = ?`
         }
 
         elemText(this.ui, 'Math Question', 'repl', question);
