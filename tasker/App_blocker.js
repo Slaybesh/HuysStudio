@@ -240,7 +240,7 @@ class UI {
                 break;
                 
             case '/':
-                bigger_num = small_num1 * small_num2;
+                let bigger_num = small_num1 * small_num2;
                 result = small_num1;
                 question = `${bigger_num} / ${small_num2} = ?`
             
