@@ -214,7 +214,7 @@ class UI {
         }
 
         let operations = ['*', '+', '-', '/']
-        let operator = randint(0, operations.length);
+        let operator = operations[randint(0, operations.length)]
 
         let small_num1 = randint(small_range[0], small_range[1]);
         let small_num2 = randint(small_range[0], small_range[1]);
@@ -253,6 +253,7 @@ class UI {
             //     question = `${big_num1} + ${big_num2} = ?`
         }
 
+        logger(`${operator}, ${small_num1}, ${small_num2}, ${big_num1}, ${big_num2}`)
         logger(`question: ${question} result: ${result}`)
         elemText(this.ui, 'Math Question', 'repl', question);
         elemText(this.ui, 'Math Result', 'repl', result);
