@@ -22,7 +22,7 @@ async function app_blocker() {
     if (par1) {
         blocked = par1;
     } else {
-        blocked = false;
+        blocked = 0;
     }
 
     logger(`first blocked = ${blocked}`)
@@ -39,7 +39,7 @@ async function app_blocker() {
         ui.load(app);
         logger('blocked');
     } else if (app.freq > app.max_freq) {
-        ui.blocked = true;
+        ui.blocked = 1;
         ui.load(app);
         logger('max freq');
         reset_vars(app);
@@ -67,7 +67,7 @@ async function app_blocker() {
             setGlobal(app.package_var, JSON.stringify(app, null, 2));
     
             if (app.dur > app.max_dur) {
-                ui.blocked = true;
+                ui.blocked = 1;
                 ui.load(app)
                 reset_vars(app);
                 break
