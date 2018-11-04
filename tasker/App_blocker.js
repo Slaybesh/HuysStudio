@@ -1,6 +1,6 @@
 async function app_blocker() {
 
-    logger = logging.create('main', true)
+    logger = create_logger('main', true)
 
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
@@ -85,7 +85,7 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    logger = logging.create('get_app_json', true)
+    logger = create_logger('get_app_json', true)
 
     let t0 = performance.now();
 
@@ -124,7 +124,7 @@ async function get_app_json() {
 }
 
 async function get_current_app() {
-    logger = logging.create('get_current_app', false)
+    logger = create_logger('get_current_app', false)
     let t0 = performance.now();
     await launch_task('AutoInput UI Query');
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
@@ -173,7 +173,7 @@ class UI {
 
     showElements() {
 
-        logger = logging.create('UI', true)
+        logger = create_logger('UI', true)
         logger('this.blocked: ' + this.blocked)
 
         elemVisibility(this.ui, 'Loading', false, 200)
@@ -219,7 +219,7 @@ class UI {
     }
 
     createMathExercise(difficulty) {
-        logger = logging.create('UI: Math', false)
+        logger = create_logger('UI: Math', false)
 
         let randint = (min, max) => {return Math.floor(Math.random() * (max - min + 1)) + min}
 
@@ -343,13 +343,13 @@ function unix_to_time(unix_ts) {
 
 
 
-function Log(path, global_debugging=true) {
+function logging(path, global_debugging=true) {
 
     // this.path = path;
     // this.global_debugging = global_debugging;
     writeFile(path, '', false);
 
-    function create(name, debugging) {
+    return create_logger = (name, debugging) => {
         // global_debugging = this.global_debugging;
         writeFile(path, name + debugging, true)
         // this.debugging = debugging
@@ -371,7 +371,7 @@ function Log(path, global_debugging=true) {
 }
 //#endregion
 
-const logging = Log('Tasker/log/app_blocker.txt', true)
+const create_logger = logging('Tasker/log/app_blocker.txt', true)
 
 let glob = {
     higher_prio: parseInt(priority) + 1,
