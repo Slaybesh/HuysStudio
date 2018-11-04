@@ -66,5 +66,5 @@ async function anim4() {
     exit()
 }
 
-var par1;
-eval(par1 + '()')
+var func;
+eval(func + '()')
