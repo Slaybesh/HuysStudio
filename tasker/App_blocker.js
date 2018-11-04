@@ -349,7 +349,7 @@ function logging(path, global_debugging=true) {
     // this.global_debugging = global_debugging;
     writeFile(path, '', false);
 
-    return create_logger = (name, debugging) => {
+    return function create_logger(name, debugging) {
         // global_debugging = this.global_debugging;
         writeFile(path, name + debugging, true)
         // this.debugging = debugging
