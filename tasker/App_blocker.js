@@ -1,6 +1,6 @@
 async function app_blocker() {
 
-    logger = logging.create('main')
+    logger = logging.create('main', true)
 
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
@@ -85,7 +85,7 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    logger = logging.create('get_app_json')
+    logger = logging.create('get_app_json', true)
 
     let t0 = performance.now();
 
@@ -173,7 +173,7 @@ class UI {
 
     showElements() {
 
-        logger = logging.create('UI')
+        logger = logging.create('UI', true)
         logger('this.blocked: ' + this.blocked)
 
         elemVisibility(this.ui, 'Loading', false, 200)
