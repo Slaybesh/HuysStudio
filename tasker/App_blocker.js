@@ -368,7 +368,7 @@ class LoggingClass {
 }
 //#endregion
 
-const logging = new LoggingClass('Tasker/log/app_blocker.txt')
+const logging = new LoggingClass('Tasker/log/app_blocker.txt', true)
 
 let glob = {
     higher_prio: parseInt(priority) + 1,
