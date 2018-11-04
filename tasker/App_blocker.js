@@ -343,15 +343,15 @@ function unix_to_time(unix_ts) {
 
 
 
-class LoggingClass {
-    constructor(path, global_debugging=true) {
-        this.path = path;
-        this.global_debugging = global_debugging;
-        writeFile(path, '', false);
-    }
-    create(name, debugging) {
-        writeFile(this.path, name + debugging, true)
-        global_debugging = this.global_debugging;
+function Log(path, global_debugging=true) {
+
+    // this.path = path;
+    // this.global_debugging = global_debugging;
+    writeFile(path, '', false);
+
+    function create(name, debugging) {
+        // global_debugging = this.global_debugging;
+        writeFile(path, name + debugging, true)
         // this.debugging = debugging
         return function(msg) {
             if (debugging && global_debugging) {
@@ -364,14 +364,14 @@ class LoggingClass {
                          + min.substr(-2) + ":" 
                          + sec.substr(-2) + ":" 
                          + ms.substr(-3);
-                writeFile(this.path, `${time}:    ${name}:    ${msg}\n`, true);
+                writeFile(path, `${time}:    ${name}:    ${msg}\n`, true);
             }
         }
     }
 }
 //#endregion
 
-const logging = new LoggingClass('Tasker/log/app_blocker.txt', true)
+const logging = Log('Tasker/log/app_blocker.txt', true)
 
 let glob = {
     higher_prio: parseInt(priority) + 1,
