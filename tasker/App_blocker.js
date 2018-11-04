@@ -299,7 +299,7 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 async function launch_task(task_name) {
 
-    logger = logger.create('launch_task', false)
+    logger = create_logger('launch_task', false)
     logger('launching: ' + task_name)
 
     performTask(task_name, glob.higher_prio);
