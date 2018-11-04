@@ -1,7 +1,6 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 async function onPress() {
-    await sleep(200)
     if (math_input == math_result) {
         hideScene('app')
     } else {

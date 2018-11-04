@@ -177,13 +177,14 @@ class UI {
         logger('this.blocked: ' + this.blocked)
 
         elemVisibility(this.ui, 'Loading', false, 200)
-        elemVisibility(this.ui, 'Information', true, 300)
+        elemVisibility(this.ui, 'Line1', true, 200)
+        elemVisibility(this.ui, 'Line2', true, 200)
         if (this.blocked) {
-            elemVisibility(this.ui, 'Blocked Button', true, 300)
+            elemVisibility(this.ui, 'Blocked Button', true, 200)
         } else {
-            elemVisibility(this.ui, 'Math Input', true, 300)
-            elemVisibility(this.ui, 'Math Question', true, 300)
-            elemVisibility(this.ui, 'Not Blocked Button', true, 300)
+            elemVisibility(this.ui, 'Math Input', true, 200)
+            elemVisibility(this.ui, 'Math Question', true, 200)
+            elemVisibility(this.ui, 'Not Blocked Button', true, 200)
         }
         // elemVisibility(this.ui, 'Time Left', true, 300)
         // elemVisibility(this.ui, 'Times Used', true, 300)
@@ -196,26 +197,30 @@ class UI {
         let Disengaged_until = glob.Disengaged_until;
         let Disengaged = glob.Disengaged;
         
-        let information = '';
+        let line1 = '';
+        let line2 = '';
         if (this.blocked) {
             if (Pomo_until > curr_time) {
-                information = `Currently in Pomo Session.\nCome back at ${unix_to_time(Pomo_until)}`;
+                line1 = 'Currently in Pomo Session.'
+                line2 = `Come back at ${unix_to_time(Pomo_until)}`;
             } else if (Disengaged_until > curr_time) {
-                information = `Currently Disengaged.\nCome back at ${unix_to_time(Disengaged_until)}`;
+                line1 = 'Currently Disengaged.';
+                line2 = `Come back at ${unix_to_time(Disengaged_until)}`;
             } else if (Disengaged) {
-                information = 'Currently Disengaged.\nCome back tomorrow.';
+                line1 = 'Currently Disengaged.';
+                line2 = 'Come back tomorrow.';
             }
         } else {
             if (app.blocked_until > curr_time) {
-                information = `Currently blocked.\nCome back at ${unix_to_time(app.blocked_until)}`;
+                line1 = 'Currently blocked.';
+                line2 = `Come back at ${unix_to_time(app.blocked_until)}`;
             } else {
-                let time_used = sec_to_time(app.dur);
-                let time_max = sec_to_time(app.max_dur);
-                information = `Time used: ${time_used} out of ${time_max}\n\n` + 
-                              `Times opened: ${app.freq} out of ${app.max_freq}`;
+                line1 = `Time used: ${sec_to_time(app.dur)} out of ${sec_to_time(app.max_dur)}`;
+                line2 = `Times opened: ${app.freq} out of ${app.max_freq}`;
             }
         }
-        elemText(this.ui, 'Information', 'repl', information)
+        elemText(this.ui, 'Line1', 'repl', line1)
+        elemText(this.ui, 'Line2', 'repl', line2)
     }
 
     createMathExercise(difficulty) {
