@@ -1,7 +1,7 @@
 function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 
-const logger = create_logger('Tasker/log/app_blocker.txt');
+const logging = new LoggingClass('Tasker/log/app_blocker.txt')
 
 let glob = {
     higher_prio: parseInt(priority) + 1,
@@ -14,10 +14,12 @@ let glob = {
 
 async function app_blocker() {
 
+    logger = logging.create('main')
+
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
+    logger('regular_checks time: ' + elapsed(t0))
 
-    var par1;
     logger(`var par1: ${par1}`)
     let blocked;
     if (par1) {
@@ -33,7 +35,7 @@ async function app_blocker() {
     if (blocked) {
         ui.load(app);
     }
-
+    
     let app = await get_app_json();
     
     if (app.blocked_until > glob.TIMES) {
@@ -97,6 +99,8 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
+    logger = logging.create('get_app_json')
+
     let t0 = performance.now();
 
     // let ai = await get_current_app();
@@ -134,11 +138,12 @@ async function get_app_json() {
 }
 
 async function get_current_app() {
+    logger = logging.create('get_current_app', false)
     let t0 = performance.now();
     await launch_task('AutoInput UI Query');
-    // logger(global('Return_AutoInput_UI_Query'))
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
-    logger('get_current_app: ' + elapsed(t0));
+    logger(global('Return_AutoInput_UI_Query'))
+    logger(elapsed(t0));
     return ai
 }
 
@@ -158,18 +163,29 @@ function reset_vars(app) {
 /* ################################ UI ################################ */
 /* #################################################################### */
 //#region
+
+function UI() {
+    this.ui = 'app';
+
+}
 class UI {
+    logger = logging.create('UI')
     constructor(blocked=false) {
         
         this.blocked = blocked;
         this.ui = 'app'
-        
-
         // destroyScene(this.ui)
         // createScene(this.ui)
         // showScene(this.ui, 'ActivityFullWindow', 0, 0, false, false)
     }
     
+    load(app) {
+
+        this.setInformation(app)
+        this.createMathExercise(this.blocked)
+        this.showElements()
+    }
+
     showElements() {
 
         logger('ui blocked : ' + this.blocked)
@@ -186,12 +202,6 @@ class UI {
         // elemVisibility(this.ui, 'Time Left', true, 300)
         // elemVisibility(this.ui, 'Times Used', true, 300)
         
-    }
-    load(app) {
-
-        this.setInformation(app)
-        this.createMathExercise(this.blocked)
-        this.showElements()
     }
 
     setInformation(app) {
@@ -297,14 +307,16 @@ class UI {
 /* ######################################################################### */
 //#region
 async function launch_task(task_name) {
-    // logger('launching: ' + task_name)
+
+    logger = logger.create('launch_task', false)
+    logger('launching: ' + task_name)
 
     performTask(task_name, glob.higher_prio);
     while (global('TRUN').includes(task_name)) {
         await sleep(100)
     }
 
-    // logger('finishing: ' + task_name)
+    logger('finishing: ' + task_name)
 }
 
 function elapsed(start_time) {return String(parseInt(performance.now() - start_time) / 1000) + ' sec'}
@@ -335,20 +347,27 @@ function unix_to_time(unix_ts) {
     return time
 }
 
-function create_logger(path, debugging=true) {
-    writeFile(path, '', false);
-    return function(msg) {
-        if (debugging) {
-            var date = new Date(); 
-            let hours = '0' + date.getHours();
-            let min = '0' + date.getMinutes();
-            let sec = '0' + date.getSeconds();
-            let ms = '00' + date.getMilliseconds();
-            let time = hours.substr(-2) + ":" 
-                     + min.substr(-2) + ":" 
-                     + sec.substr(-2) + ":" 
-                     + ms.substr(-3);
-            writeFile(path, `${time}    ${msg}\n`, true);
+
+class LoggingClass {
+    constructor(path, debugging=true) {
+        this.path = path;
+        this.debugging = debugging;
+        writeFile(path, '', false);
+    }
+    create(name, debugging=true) {
+        return function(msg) {
+            if (debugging && this.debugging) {
+                var date = new Date(); 
+                let hours = '0' + date.getHours();
+                let min = '0' + date.getMinutes();
+                let sec = '0' + date.getSeconds();
+                let ms = '00' + date.getMilliseconds();
+                let time = hours.substr(-2) + ":" 
+                         + min.substr(-2) + ":" 
+                         + sec.substr(-2) + ":" 
+                         + ms.substr(-3);
+                writeFile(path, `${time}:    ${name}:    ${msg}\n`, true);
+            }
         }
     }
 }
