@@ -171,20 +171,31 @@ class UI {
         this.showElements()
     }
 
+    showElem(name, show, speed=200) {
+        elemVisibility(this.ui, name, show, speed)
+    }
+
     showElements() {
 
         logger = create_logger('UI', true)
         logger('this.blocked: ' + this.blocked)
 
-        elemVisibility(this.ui, 'Loading', false, 200)
-        elemVisibility(this.ui, 'Line1', true, 200)
-        elemVisibility(this.ui, 'Line2', true, 200)
+        showElem('Loading', false)
+        showElem('Line1', true)
+        showElem('Line2', true)
+        // elemVisibility(this.ui, 'Loading', false, 200)
+        // elemVisibility(this.ui, 'Line1', true, 200)
+        // elemVisibility(this.ui, 'Line2', true, 200)
         if (this.blocked) {
-            elemVisibility(this.ui, 'Blocked Button', true, 200)
+            showElem('Blocked Button', true)
+            // elemVisibility(this.ui, 'Blocked Button', true, 200)
         } else {
-            elemVisibility(this.ui, 'Math Input', true, 200)
-            elemVisibility(this.ui, 'Math Question', true, 200)
-            elemVisibility(this.ui, 'Not Blocked Button', true, 200)
+            showElem('Math Input', true)
+            showElem('Math Question', true)
+            showElem('Not Blocked Button', true)
+            // elemVisibility(this.ui, 'Math Input', true, 200)
+            // elemVisibility(this.ui, 'Math Question', true, 200)
+            // elemVisibility(this.ui, 'Not Blocked Button', true, 200)
         }
         // elemVisibility(this.ui, 'Time Left', true, 300)
         // elemVisibility(this.ui, 'Times Used', true, 300)
