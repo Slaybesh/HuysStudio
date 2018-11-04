@@ -1,17 +1,3 @@
-function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
-
-
-const logging = new LoggingClass('Tasker/log/app_blocker.txt')
-
-let glob = {
-    higher_prio: parseInt(priority) + 1,
-    get TIMES() {return parseInt(global('TIMES'))},
-    get Disengaged() {return parseInt(global('Disengaged'))},
-    get Disengaged_until() {return parseInt(global('Disengaged_until'))},
-    get Pomo_until() {return parseInt(global('Pomo_until'))}
-}
-
-
 async function app_blocker() {
 
     logger = logging.create('main')
@@ -309,6 +295,8 @@ class UI {
 /* ################################ helpers ################################ */
 /* ######################################################################### */
 //#region
+function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
+
 async function launch_task(task_name) {
 
     logger = logger.create('launch_task', false)
@@ -379,6 +367,16 @@ class LoggingClass {
     }
 }
 //#endregion
+
+const logging = new LoggingClass('Tasker/log/app_blocker.txt')
+
+let glob = {
+    higher_prio: parseInt(priority) + 1,
+    get TIMES() {return parseInt(global('TIMES'))},
+    get Disengaged() {return parseInt(global('Disengaged'))},
+    get Disengaged_until() {return parseInt(global('Disengaged_until'))},
+    get Pomo_until() {return parseInt(global('Pomo_until'))}
+}
 
 var aipackage;
 var par1;
