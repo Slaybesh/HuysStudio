@@ -34,32 +34,36 @@ class Element {
 
 let anim = new Element('Test Scene', 'Rectangle1')
 
-function anim1() {
+async function anim1() {
 
     anim.on('ff0000', 200)
     await sleep(200)
     anim.off('000000', 200)
+    exit()
 }
 
-function anim2() {
+async function anim2() {
 
     anim.on('ff0000', 200)
     await sleep(100)
     anim.off('000000', 200)
+    exit()
 }
 
-function anim3() {
+async function anim3() {
 
     anim.on('ff0000', 300)
     await sleep(100)
     anim.off('000000', 100)
+    exit()
 }
 
-function anim4() {
+async function anim4() {
 
     anim.on('ff0000', 100)
     await sleep(100)
     anim.off('000000', 300)
+    exit()
 }
 
 var par1;
