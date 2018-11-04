@@ -188,7 +188,7 @@ class UI {
     load(app) {
 
         this.setInformation(app)
-        this.createMathExercise(difficulty)
+        this.createMathExercise(this.blocked)
         this.showElements()
     }
 
@@ -199,7 +199,6 @@ class UI {
         let Disengaged = glob.Disengaged;
         
         let information = '';
-        let difficulty;
         if (this.blocked) {
             if (Pomo_until > curr_time) {
                 information = 'Currently in Pomo Session.\nCome back at ' + unix_to_time(Pomo_until);
@@ -208,16 +207,13 @@ class UI {
             } else if (Disengaged) {
                 information = 'Currently Disengaged.\nCome back tomorrow.';
             }
-            difficulty = 1;
         } else {
             if (app.blocked_until > curr_time) {
                 information = 'Currently blocked.\nCome back at ' + unix_to_time(app.blocked_until);
-                difficulty = 1;
             } else {
                 let time_left = time_left_string(app.dur, app.max_dur);
                 information = `Time left: ${time_left}\n\n` + 
                               `Times opened: ${app.freq} out of ${app.max_freq}`;
-                difficulty = 0;
             }
         }
         elemText(this.ui, 'Information', 'repl', information)
