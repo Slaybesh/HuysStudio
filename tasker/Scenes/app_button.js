@@ -5,12 +5,12 @@ async function onPress() {
     if (math_input == math_result) {
         hideScene('app')
     } else {
+        elemVisibility('app', 'Math Input', false, 200)
         elemText('app', 'Math Input', 'repl', '');
-        elemVisibility('app', 'Math Input', false, 0)
         elemBorder('app', 'Math Input', 1, 'ff0000')
-        elemVisibility('app', 'Math Input', true, 300)
+        elemVisibility('app', 'Math Input', true, 200)
         await sleep(500)
-        elemVisibility('app', 'Math Input', false, 300)
+        elemVisibility('app', 'Math Input', false, 200)
         elemBorder('app', 'Math Input', 1, '000000')
         elemVisibility('app', 'Math Input', true, 0)
     }
