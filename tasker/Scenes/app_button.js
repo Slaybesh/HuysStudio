@@ -14,6 +14,7 @@ async function onPress() {
         elemBorder('app', 'Math Input', 1, '000000')
         elemVisibility('app', 'Math Input', true, 0)
     }
+    exit()
 }
 
 var math_input;
