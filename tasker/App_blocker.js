@@ -12,16 +12,25 @@ let glob = {
 }
 
 
-async function app_blocker(blocked=false) {
+async function app_blocker() {
 
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
+
+    var par1;
+    let blocked;
+    if (par1) {
+        blocked = par1;
+    } else {
+        blocked = false;
+    }
+
+    logger(`first blocked = ${blocked}`)
 
     let ui = new UI(blocked);
 
     if (blocked) {
         ui.load(app);
-        exit();
     }
 
     let app = await get_app_json();
@@ -40,41 +49,38 @@ async function app_blocker(blocked=false) {
     } else {
         app.freq = app.freq + 1;
         ui.load(app)
-    }
 
-
-    let ai = await get_current_app();
-
-    let loop_packages = [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'];
-    logger('start part: ' + elapsed(t0));
-    while (loop_packages.includes(ai.package) && global('TRUN').includes('App Blocker')) {
-
-        app.last_used = glob.TIMES;
-
-        // logger('ai.package: ' + ai.package);
-        performTask('Notification.create', glob.higher_prio,
-                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
-        
-        // await sleep(500);
-        ai = await get_current_app();
-        setGlobal(app.package_var, JSON.stringify(app, null, 2));
-
-        if (app.dur > app.max_dur) {
-            ui.blocked = true;
-            ui.load(app)
-            reset_vars(app);
-            break
-        }
-
-
-        if ([app.package, 'com.android.systemui'].includes(ai.package)) {
-            /* only add to duration if in app or system ui */
-            app.dur = app.dur + (glob.TIMES - app.last_used);
-        }
-
-    }
+        let ai = await get_current_app();
+    
+        let loop_packages = [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'];
+        logger('start part: ' + elapsed(t0));
+        while (loop_packages.includes(ai.package) && global('TRUN').includes('App Blocker')) {
+    
+            app.last_used = glob.TIMES;
+    
+            // logger('ai.package: ' + ai.package);
+            performTask('Notification.create', glob.higher_prio,
+                        `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
+            
+            // await sleep(500);
+            ai = await get_current_app();
+            setGlobal(app.package_var, JSON.stringify(app, null, 2));
+    
+            if (app.dur > app.max_dur) {
+                ui.blocked = true;
+                ui.load(app)
+                reset_vars(app);
+                break
+            }
     
     
+            if ([app.package, 'com.android.systemui'].includes(ai.package)) {
+                /* only add to duration if in app or system ui */
+                app.dur = app.dur + (glob.TIMES - app.last_used);
+            }
+        }
+    }
+
     performTask('Notification.cancel', glob.higher_prio, app.name);
     setGlobal(app.package_var, JSON.stringify(app, null, 2));
     logger('out of app');
@@ -94,7 +100,7 @@ async function get_app_json() {
     // let ai = await get_current_app();
     // let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
 
-    logger('var aipackage = ' + aipackage)
+    // logger('var aipackage = ' + aipackage)
     let package_var = aipackage.replace(/\./g, '_');
     // let package_var = ai.package.replace(/\./g, '_');
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
@@ -121,7 +127,7 @@ async function get_app_json() {
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
     logger('get_app_json: ' + elapsed(t0));
-    logger('app_json_str: ' + app_json_str);
+    // logger('app_json_str: ' + app_json_str);
     return app_json
 }
 
@@ -164,7 +170,7 @@ class UI {
     
     showElements() {
 
-        logger('blocked : ' + this.blocked)
+        logger('ui blocked : ' + this.blocked)
 
         elemVisibility(this.ui, 'Loading', false, 200)
         elemVisibility(this.ui, 'Information', true, 300)
@@ -180,6 +186,13 @@ class UI {
         
     }
     load(app) {
+
+        this.setInformation(app)
+        this.createMathExercise(difficulty)
+        this.showElements()
+    }
+
+    setInformation(app) {
         let curr_time = glob.TIMES;
         let Pomo_until = glob.Pomo_until;
         let Disengaged_until = glob.Disengaged_until;
@@ -207,13 +220,7 @@ class UI {
                 difficulty = 0;
             }
         }
-
-        logger('set Information')
         elemText(this.ui, 'Information', 'repl', information)
-        logger('show scene')
-        logger('create math question')
-        this.createMathExercise(difficulty)
-        this.showElements()
     }
 
     createMathExercise(difficulty) {
@@ -277,8 +284,8 @@ class UI {
             //     question = `${big_num1} + ${big_num2}  =`
         }
 
-        logger(`${operator}, ${small_num1}, ${small_num2}, ${big_num1}, ${big_num2}`)
-        logger(`question: ${question} result: ${result}`)
+        logger(`Math: ${operator}, ${small_num1}, ${small_num2}, ${big_num1}, ${big_num2}`)
+        logger(`Math: question: ${question} result: ${result}`)
         elemText(this.ui, 'Math Question', 'repl', question);
         elemText(this.ui, 'Math Result', 'repl', result);
 
@@ -351,4 +358,4 @@ function create_logger(path, debugging=true) {
 
 var aipackage;
 var par1;
-app_blocker(parseInt(par1));
+app_blocker();
