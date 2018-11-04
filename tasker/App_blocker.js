@@ -169,7 +169,6 @@ function UI() {
 
 }
 class UI {
-    logger = logging.create('UI')
     constructor(blocked=false) {
         
         this.blocked = blocked;
@@ -188,7 +187,8 @@ class UI {
 
     showElements() {
 
-        logger('ui blocked : ' + this.blocked)
+        logger = logging.create('UI')
+        logger('this.blocked: ' + this.blocked)
 
         elemVisibility(this.ui, 'Loading', false, 200)
         elemVisibility(this.ui, 'Information', true, 300)
@@ -232,6 +232,8 @@ class UI {
     }
 
     createMathExercise(difficulty) {
+        logger = logging.create('UI: Math', false)
+
         let randint = (min, max) => {return Math.floor(Math.random() * (max - min + 1)) + min}
 
         let round_up = (rounding_num, round_to) => {
@@ -292,8 +294,8 @@ class UI {
             //     question = `${big_num1} + ${big_num2}  =`
         }
 
-        logger(`Math: ${operator}, ${small_num1}, ${small_num2}, ${big_num1}, ${big_num2}`)
-        logger(`Math: question: ${question} result: ${result}`)
+        logger(`${operator}, ${small_num1}, ${small_num2}, ${big_num1}, ${big_num2}`)
+        logger(`question: ${question} result: ${result}`)
         elemText(this.ui, 'Math Question', 'repl', question);
         elemText(this.ui, 'Math Result', 'repl', result);
 
