@@ -346,12 +346,13 @@ function unix_to_time(unix_ts) {
 class LoggingClass {
     constructor(path, global_debugging=true) {
         this.path = path;
-        this.debugging = global_debugging;
+        this.global_debugging = global_debugging;
         writeFile(path, '', false);
     }
     create(name, debugging=true) {
+        this.debugging = debugging
         return function(msg) {
-            if (debugging && this.debugging) {
+            if (this.debugging && this.global_debugging) {
                 var date = new Date(); 
                 let hours = '0' + date.getHours();
                 let min = '0' + date.getMinutes();
@@ -361,7 +362,7 @@ class LoggingClass {
                          + min.substr(-2) + ":" 
                          + sec.substr(-2) + ":" 
                          + ms.substr(-3);
-                writeFile(path, `${time}:    ${name}:    ${msg}\n`, true);
+                writeFile(this.path, `${time}:    ${name}:    ${msg}\n`, true);
             }
         }
     }
