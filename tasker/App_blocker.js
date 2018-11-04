@@ -164,6 +164,8 @@ class UI {
     
     showElements() {
 
+        logger('blocked : ' + this.blocked)
+
         elemVisibility(this.ui, 'Loading', false, 200)
         elemVisibility(this.ui, 'Information', true, 300)
         if (this.blocked) {
