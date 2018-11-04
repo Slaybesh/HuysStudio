@@ -349,4 +349,4 @@ function create_logger(path, debugging=true) {
 
 var aipackage;
 var par1;
-app_blocker(par1);
+app_blocker(parseInt(par1));
