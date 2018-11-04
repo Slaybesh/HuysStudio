@@ -39,7 +39,7 @@ async function app_blocker() {
     if (app.blocked_until > glob.TIMES) {
         ui.blocked = 1;
         ui.load(app);
-        logger('blocked');
+        logger('currently blocked');
     } else if (app.freq > app.max_freq) {
         ui.blocked = 1;
         ui.load(app);
@@ -48,38 +48,38 @@ async function app_blocker() {
     } else if (glob.TIMES - app.last_used > app.reset_time) {
         app.dur = 0;
         app.freq = 0;
-    } else {
-        app.freq = app.freq + 1;
-        ui.load(app)
+    } 
 
-        let ai = await get_current_app();
-    
-        let loop_packages = [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'];
-        logger('start part: ' + elapsed(t0));
-        while (loop_packages.includes(ai.package) && global('TRUN').includes('App Blocker')) {
-    
-            app.last_used = glob.TIMES;
-    
-            // logger('ai.package: ' + ai.package);
-            performTask('Notification.create', glob.higher_prio,
-                        `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
-            
-            // await sleep(500);
-            ai = await get_current_app();
-            setGlobal(app.package_var, JSON.stringify(app, null, 2));
-    
-            if (app.dur > app.max_dur) {
-                ui.blocked = 1;
-                ui.load(app)
-                reset_vars(app);
-                break
-            }
-    
-    
-            if ([app.package, 'com.android.systemui'].includes(ai.package)) {
-                /* only add to duration if in app or system ui */
-                app.dur = app.dur + (glob.TIMES - app.last_used);
-            }
+    app.freq = app.freq + 1;
+    ui.load(app)
+
+    let ai = {package: aipackage}
+
+    let loop_packages = [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'];
+    logger('start part: ' + elapsed(t0));
+    while (loop_packages.includes(ai.package) && global('TRUN').includes('App Blocker')) {
+
+        app.last_used = glob.TIMES;
+
+        // logger('ai.package: ' + ai.package);
+        performTask('Notification.create', glob.higher_prio,
+                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
+        
+        // await sleep(500);
+        ai = await get_current_app();
+        setGlobal(app.package_var, JSON.stringify(app, null, 2));
+
+        if (app.dur > app.max_dur) {
+            ui.blocked = 1;
+            ui.load(app)
+            reset_vars(app);
+            break
+        }
+
+
+        if ([app.package, 'com.android.systemui'].includes(ai.package)) {
+            /* only add to duration if in app or system ui */
+            app.dur = app.dur + (glob.TIMES - app.last_used);
         }
     }
 
