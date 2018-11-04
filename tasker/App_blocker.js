@@ -30,6 +30,7 @@ async function app_blocker(blocked=false) {
         ui.load(app);
         logger('blocked');
     } else if (app.freq > app.max_freq) {
+        ui.blocked = true;
         ui.load(app);
         logger('max freq');
         reset_vars(app);
@@ -59,6 +60,7 @@ async function app_blocker(blocked=false) {
         setGlobal(app.package_var, JSON.stringify(app, null, 2));
 
         if (app.dur > app.max_dur) {
+            ui.blocked = true;
             ui.load(app)
             reset_vars(app);
             break
