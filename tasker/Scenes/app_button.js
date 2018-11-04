@@ -8,9 +8,9 @@ async function onPress() {
         elemVisibility('app', 'Math Input', false, 100)
         elemText('app', 'Math Input', 'repl', '');
         elemBorder('app', 'Math Input', 2, 'ff0000')
-        elemVisibility('app', 'Math Input', true, 100)
-        // await sleep(100)
-        elemVisibility('app', 'Math Input', false, 100)
+        elemVisibility('app', 'Math Input', true, 200)
+        await sleep(200)
+        elemVisibility('app', 'Math Input', false, 200)
         elemBorder('app', 'Math Input', 0, '000000')
         elemVisibility('app', 'Math Input', true, 0)
         performTask('Scene Focus', parseInt(priority) + 1, 'app', 'Math Input')
