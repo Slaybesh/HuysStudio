@@ -5,6 +5,7 @@ async function onPress() {
     if (math_input == math_result) {
         hideScene('app')
     } else {
+        performTask('Scene Focus', parseInt(priority) + 1, 'app', 'Math Result')
         elemVisibility('app', 'Math Input', false, 100)
         elemText('app', 'Math Input', 'repl', '');
         elemBorder('app', 'Math Input', 2, 'ff0000')
