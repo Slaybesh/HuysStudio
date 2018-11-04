@@ -350,7 +350,7 @@ class LoggingClass {
         writeFile(path, '', false);
     }
     create(name, debugging=true) {
-        writeFile(this.path, name)
+        writeFile(this.path, name,true)
         this.debugging = debugging
         return function(msg) {
             if (this.debugging && this.global_debugging) {
