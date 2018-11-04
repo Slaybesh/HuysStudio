@@ -344,9 +344,9 @@ function unix_to_time(unix_ts) {
 
 
 class LoggingClass {
-    constructor(path, debugging=true) {
+    constructor(path, global_debugging=true) {
         this.path = path;
-        this.debugging = debugging;
+        this.debugging = global_debugging;
         writeFile(path, '', false);
     }
     create(name, debugging=true) {
