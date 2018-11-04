@@ -8,11 +8,11 @@ async function onPress() {
 
         elemVisibility('app', 'Math Input', false, 200)
         elemText('app', 'Math Input', 'repl', '');
-        elemBorder('app', 'Math Input', 1, 'ff0000')
+        elemBorder('app', 'Math Input', 2, 'ff0000')
         elemVisibility('app', 'Math Input', true, 200)
         await sleep(1000)
         elemVisibility('app', 'Math Input', false, 200)
-        elemBorder('app', 'Math Input', 1, '000000')
+        elemBorder('app', 'Math Input', 0, '000000')
         elemVisibility('app', 'Math Input', true, 0)
     }
     exit()
