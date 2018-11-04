@@ -18,7 +18,7 @@ async function app_blocker() {
 
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
-    logger('regular_checks time: ' + elapsed(t0))
+    logger('regular_checks time: ' + timer(t0))
 
     logger(`var par1: ${par1}`)
     let blocked;
@@ -58,14 +58,14 @@ async function app_blocker() {
     let ai = {package: aipackage}
 
     let loop_packages = [app.package, 'com.android.systemui', 'net.dinglisch.android.taskerm'];
-    logger('start part: ' + elapsed(t0));
+    logger('start part: ' + timer(t0));
     while (loop_packages.includes(ai.package) && global('TRUN').includes('App Blocker')) {
 
         app.last_used = glob.TIMES;
 
         // logger('ai.package: ' + ai.package);
         performTask('Notification.create', glob.higher_prio,
-                    `${app.name}|${time_left_string(app.dur, app.max_dur)}|mw_image_timelapse|5`);
+                    `${app.name}|${sec_to_time(app.max_dur - app.dur)}|mw_image_timelapse|5`);
         
         // await sleep(500);
         ai = await get_current_app();
@@ -132,7 +132,7 @@ async function get_app_json() {
         }
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
-    logger('get_app_json: ' + elapsed(t0));
+    logger('get_app_json: ' + timer(t0));
     // logger('app_json_str: ' + app_json_str);
     return app_json
 }
@@ -143,7 +143,7 @@ async function get_current_app() {
     await launch_task('AutoInput UI Query');
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
     logger(global('Return_AutoInput_UI_Query'))
-    logger(elapsed(t0));
+    logger(timer(t0));
     return ai
 }
 
@@ -164,10 +164,10 @@ function reset_vars(app) {
 /* #################################################################### */
 //#region
 
-function UI() {
-    this.ui = 'app';
+// function UI() {
+//     this.ui = 'app';
 
-}
+// }
 class UI {
     constructor(blocked=false) {
         
@@ -213,18 +213,19 @@ class UI {
         let information = '';
         if (this.blocked) {
             if (Pomo_until > curr_time) {
-                information = 'Currently in Pomo Session.\nCome back at ' + unix_to_time(Pomo_until);
+                information = `Currently in Pomo Session.\nCome back at ${unix_to_time(Pomo_until)}`;
             } else if (Disengaged_until > curr_time) {
-                information = 'Currently Disengaged.\nCome back at ' + unix_to_time(Disengaged_until);
+                information = `Currently Disengaged.\nCome back at ${unix_to_time(Disengaged_until)}`;
             } else if (Disengaged) {
                 information = 'Currently Disengaged.\nCome back tomorrow.';
             }
         } else {
             if (app.blocked_until > curr_time) {
-                information = 'Currently blocked.\nCome back at ' + unix_to_time(app.blocked_until);
+                information = `Currently blocked.\nCome back at ${unix_to_time(app.blocked_until)}`;
             } else {
-                let time_left = time_left_string(app.dur, app.max_dur);
-                information = `Time left: ${time_left}\n\n` + 
+                let time_used = sec_to_time(app.dur);
+                let time_max = sec_to_time(app.max_dur);
+                information = `Time used: ${time_used} out of ${time_max}\n\n` + 
                               `Times opened: ${app.freq} out of ${app.max_freq}`;
             }
         }
@@ -321,23 +322,25 @@ async function launch_task(task_name) {
     logger('finishing: ' + task_name)
 }
 
-function elapsed(start_time) {return String(parseInt(performance.now() - start_time) / 1000) + ' sec'}
+function timer(start_time) {
+    return String(parseInt(performance.now() - start_time) / 1000) + ' sec'
+}
 
-function time_left_string(curr_time, future_time) {
+function sec_to_time(seconds) {
 
     let pad = (n, padding) => {
         n = String(n);
         return n.length >= padding ? n : new Array(padding - n.length + 1).join('0') + n;
     }
 
-    let time_left_min = Math.floor((future_time - curr_time) / 60);
-    let time_left_sec = (future_time - curr_time) % 60;
+    let min = Math.floor((seconds) / 60);
+    let sec = seconds % 60;
 
-    time_left_min = pad(String(time_left_min), 2)
-    time_left_sec = pad(String(time_left_sec), 2)
+    min = '0' + String(min)
+    sec = '0' + String(sec)
 
-    let time_left = `${time_left_min}:${time_left_sec}`
-
+    let time_left = `${min.substr(-2)}:${sec.substr(-2)}`
+    
     return time_left
 }
 
@@ -345,9 +348,11 @@ function unix_to_time(unix_ts) {
     let date = new Date(unix_ts * 1000);
     let hour = '0' + date.getHours();
     let min = '0' + date.getMinutes();
-    let time = hour.substr(-2) + ':' + min.substr(-2);
+    let time = `${hour.substr(-2)}:${min.substr(-2)}`;
     return time
 }
+
+
 
 
 class LoggingClass {
