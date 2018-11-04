@@ -18,6 +18,7 @@ async function app_blocker() {
     performTask('regular_checks', glob.higher_prio);
 
     var par1;
+    logger(`var par1: ${par1}`)
     let blocked;
     if (par1) {
         blocked = par1;
