@@ -36,6 +36,7 @@ async function app_blocker() {
     let app = await get_app_json();
     
     if (app.blocked_until > glob.TIMES) {
+        ui.blocked = 1;
         ui.load(app);
         logger('blocked');
     } else if (app.freq > app.max_freq) {
