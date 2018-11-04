@@ -349,11 +349,11 @@ class LoggingClass {
         this.global_debugging = global_debugging;
         writeFile(path, '', false);
     }
-    create(name, debugging=true) {
-        writeFile(this.path, name,true)
-        this.debugging = debugging
+    create(name, debugging) {
+        writeFile(this.path, name + debugging, true)
+        // this.debugging = debugging
         return function(msg) {
-            if (this.debugging && this.global_debugging) {
+            if (debugging && this.global_debugging) {
                 var date = new Date(); 
                 let hours = '0' + date.getHours();
                 let min = '0' + date.getMinutes();
