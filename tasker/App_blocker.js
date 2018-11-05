@@ -171,7 +171,7 @@ class UI {
         this.showElements()
     }
 
-    async showElem(name, show, speed=100) {
+    async showElem(name, show, speed=1000) {
         elemVisibility(this.ui, name, show, speed)
     }
 
