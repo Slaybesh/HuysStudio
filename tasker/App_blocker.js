@@ -85,9 +85,7 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    let logger = create_logger('get_app_json', true)
-
-    let t0 = performance.now();
+    // let logger = create_logger('get_app_json', true)
 
     // let ai = await get_current_app();
     // let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
@@ -98,7 +96,6 @@ async function get_app_json() {
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     let app_json_str = global(package_var);
-    // logger('app_json_str' + app_json_str);
     let app_json;
     if (app_json_str) {
         app_json = JSON.parse(app_json_str);
@@ -118,8 +115,6 @@ async function get_app_json() {
         }
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
-    logger('get_app_json: ' + timer(t0));
-    // logger('app_json_str: ' + app_json_str);
     return app_json
 }
 
@@ -150,10 +145,6 @@ function reset_vars(app) {
 /* #################################################################### */
 //#region
 
-// function UI() {
-//     this.ui = 'app';
-
-// }
 class UI {
     constructor(blocked=false) {
         
@@ -180,8 +171,10 @@ class UI {
 
     async showElements() {
 
-        let logger = create_logger('UI', true)
+        let logger = create_logger('UI: showElements', true)
         logger('this.blocked: ' + this.blocked)
+
+        let t0 = performance.now()
 
         this.showElem('Loading', false)
         this.showElem('Line1', true)
@@ -202,7 +195,7 @@ class UI {
         }
         // elemVisibility(this.ui, 'Time Left', true, 300)
         // elemVisibility(this.ui, 'Times Used', true, 300)
-        
+        logger(timer(t0))
     }
 
     setInformation(app) {
