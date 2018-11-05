@@ -1,6 +1,6 @@
 async function app_blocker() {
 
-    logger = create_logger('main', true)
+    let logger = create_logger('main', true)
 
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
@@ -85,7 +85,7 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    logger = create_logger('get_app_json', true)
+    let logger = create_logger('get_app_json', true)
 
     let t0 = performance.now();
 
@@ -124,7 +124,7 @@ async function get_app_json() {
 }
 
 async function get_current_app() {
-    logger = create_logger('get_current_app', false)
+    let logger = create_logger('get_current_app', false)
     let t0 = performance.now();
     await launch_task('AutoInput UI Query');
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
@@ -172,7 +172,7 @@ class UI {
     }
 
     async showElem(name, show, speed=200) {
-        logger = create_logger('UI: showElem')
+        let logger = create_logger('UI: showElem')
         let t0 = performance.now()
         elemVisibility(this.ui, name, show, speed)
         logger('took: ' + timer(t0))
@@ -180,7 +180,7 @@ class UI {
 
     async showElements() {
 
-        logger = create_logger('UI', true)
+        let logger = create_logger('UI', true)
         logger('this.blocked: ' + this.blocked)
 
         this.showElem('Loading', false)
@@ -238,7 +238,7 @@ class UI {
     }
 
     createMathExercise(difficulty) {
-        logger = create_logger('UI: Math', false)
+        let logger = create_logger('UI: Math', false)
 
         let randint = (min, max) => {return Math.floor(Math.random() * (max - min + 1)) + min}
 
@@ -318,7 +318,7 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 async function launch_task(task_name) {
 
-    logger = create_logger('launch_task', false)
+    let logger = create_logger('launch_task', false)
     logger('launching: ' + task_name)
 
     performTask(task_name, glob.higher_prio);
