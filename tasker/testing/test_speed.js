@@ -1,10 +1,12 @@
-// function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
+function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
-// async function wait() {
-//     await sleep(1000)
-//     exit();
-// }
+async function wait() {
+    await sleep(1000)
+    await sleep(1000)
+    await sleep(1000)
+    await sleep(1000)
+    await sleep(1000)
+    exit();
+}
 
-// wait()
-
-setTimeout(exit, 1000)
+wait()
