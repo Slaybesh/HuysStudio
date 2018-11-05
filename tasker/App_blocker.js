@@ -366,9 +366,7 @@ function logging(path, global_debugging=true) {
     writeFile(path, '', false);
 
     return function create_logger(name, debugging) {
-        // global_debugging = this.global_debugging;
-        writeFile(path, name + debugging, true)
-        // this.debugging = debugging
+
         return function(msg) {
             if (debugging && global_debugging) {
                 var date = new Date(); 

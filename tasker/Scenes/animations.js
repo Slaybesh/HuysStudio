@@ -1,3 +1,5 @@
+function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
+
 class Element {
     constructor(scene, elem) {
         this.scene = scene
@@ -6,7 +8,7 @@ class Element {
     hide(speed) {
         elemVisibility(this.scene, this.elem, false, speed)
     }
-    show(speed) {ew
+    show(speed) {
         elemVisibility(this.scene, this.elem, true, speed)
     }
     border(color, size) {
@@ -26,9 +28,9 @@ class Element {
     }
 
     off(color, speed) {
-        anim.hide(speed)
-        anim.border(color, 0)
-        anim.show(0)
+        this.hide(speed)
+        this.border(color, 0)
+        this.show(0)
     }
 }
 
@@ -52,9 +54,9 @@ async function anim2() {
 
 async function anim3() {
 
-    anim.on('ff0000', 300)
+    anim.on('ff0000', 100)
     await sleep(100)
-    anim.off('000000', 100)
+    anim.off('000000', 200)
     exit()
 }
 

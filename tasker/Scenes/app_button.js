@@ -20,6 +20,18 @@ class Element {
     focus(element) {
         performTask('Scene Focus', parseInt(priority) + 1, this.scene, element)
     }
+
+    on(color, speed) {
+        this.hide(0)
+        this.border(color, 2)
+        this.show(speed)
+    }
+
+    off(color, speed) {
+        this.hide(speed)
+        this.border(color, 0)
+        this.show(0)
+    }
 }
 
 async function onPress() {
@@ -37,11 +49,11 @@ async function onPress() {
         elem_math_input.hide(100)
         elem_math_input.text('')
         elem_math_input.border('ff0000', 2)
-        elem_math_input.show(200)
+        elem_math_input.show(100)
         
-        await sleep(200)
+        await sleep(100)
         
-        elem_math_input.hide(200)
+        elem_math_input.hide(300)
         elem_math_input.border('000000', 0)
         elem_math_input.show(0)
         
