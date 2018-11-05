@@ -171,8 +171,11 @@ class UI {
         this.showElements()
     }
 
-    async showElem(name, show, speed=1000) {
+    async showElem(name, show, speed=200) {
+        logger = create_logger('UI: showElem')
+        let t0 = performance.now()
         elemVisibility(this.ui, name, show, speed)
+        logger('took: ' + timer(t0))
     }
 
     async showElements() {
