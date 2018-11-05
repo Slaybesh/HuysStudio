@@ -4,7 +4,7 @@ async function app_blocker() {
 
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
-    logger('regular_checks time: ' + timer(t0))
+    // logger('regular_checks time: ' + timer(t0))
 
     logger(`var par1: ${par1}`)
     let blocked;
@@ -171,11 +171,11 @@ class UI {
         this.showElements()
     }
 
-    async showElem(name, show, speed=200) {
+    async showElem(name, show, speed=100) {
         elemVisibility(this.ui, name, show, speed)
     }
 
-    showElements() {
+    async showElements() {
 
         logger = create_logger('UI', true)
         logger('this.blocked: ' + this.blocked)
@@ -190,8 +190,8 @@ class UI {
             this.showElem('Blocked Button', true)
             // elemVisibility(this.ui, 'Blocked Button', true, 200)
         } else {
-            this.showElem('Math Input', true)
             this.showElem('Math Question', true)
+            this.showElem('Math Input', true)
             this.showElem('Not Blocked Button', true)
             // elemVisibility(this.ui, 'Math Input', true, 200)
             // elemVisibility(this.ui, 'Math Question', true, 200)
