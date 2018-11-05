@@ -8,7 +8,7 @@ class myClass {
     async wait() {
         await sleep(1000)
     }
-    test() {
+    async test() {
         console.log('before')
         this.wait(1000)
         console.log('after')

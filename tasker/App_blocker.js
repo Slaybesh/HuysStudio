@@ -175,8 +175,9 @@ class UI {
         logger('this.blocked: ' + this.blocked)
 
         let t0 = performance.now()
-
+        
         this.showElem('Loading', false)
+        logger(timer(t0))
         this.showElem('Line1', true)
         this.showElem('Line2', true)
         // elemVisibility(this.ui, 'Loading', false, 200)
@@ -195,7 +196,6 @@ class UI {
         }
         // elemVisibility(this.ui, 'Time Left', true, 300)
         // elemVisibility(this.ui, 'Times Used', true, 300)
-        logger(timer(t0))
     }
 
     setInformation(app) {
