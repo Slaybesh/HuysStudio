@@ -1,10 +1,10 @@
 async function app_blocker() {
 
-    logger = create_logger('main', true)
+    let logger = create_logger('main', true)
 
     let t0 = performance.now();
     performTask('regular_checks', glob.higher_prio);
-    logger('regular_checks time: ' + timer(t0))
+    // logger('regular_checks time: ' + timer(t0))
 
     logger(`var par1: ${par1}`)
     let blocked;
@@ -85,9 +85,7 @@ async function get_app_json() {
     /* vars_str is a JSON string containing 
        app information */
 
-    logger = create_logger('get_app_json', true)
-
-    let t0 = performance.now();
+    // let logger = create_logger('get_app_json', true)
 
     // let ai = await get_current_app();
     // let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
@@ -98,7 +96,6 @@ async function get_app_json() {
     package_var = package_var.charAt(0).toUpperCase() + package_var.slice(1);
 
     let app_json_str = global(package_var);
-    // logger('app_json_str' + app_json_str);
     let app_json;
     if (app_json_str) {
         app_json = JSON.parse(app_json_str);
@@ -118,13 +115,11 @@ async function get_app_json() {
         }
         setGlobal(package_var, JSON.stringify(app_json, null, 2));
     }
-    logger('get_app_json: ' + timer(t0));
-    // logger('app_json_str: ' + app_json_str);
     return app_json
 }
 
 async function get_current_app() {
-    logger = create_logger('get_current_app', false)
+    let logger = create_logger('get_current_app', false)
     let t0 = performance.now();
     await launch_task('AutoInput UI Query');
     let ai = JSON.parse(global('Return_AutoInput_UI_Query'));
@@ -150,10 +145,6 @@ function reset_vars(app) {
 /* #################################################################### */
 //#region
 
-// function UI() {
-//     this.ui = 'app';
-
-// }
 class UI {
     constructor(blocked=false) {
         
@@ -172,15 +163,21 @@ class UI {
     }
 
     async showElem(name, show, speed=200) {
+        let logger = create_logger('UI: showElem')
+        let t0 = performance.now()
         elemVisibility(this.ui, name, show, speed)
+        logger('took: ' + timer(t0))
     }
 
-    showElements() {
+    async showElements() {
 
-        logger = create_logger('UI', true)
+        let logger = create_logger('UI: showElements', true)
         logger('this.blocked: ' + this.blocked)
 
+        let t0 = performance.now()
+        
         this.showElem('Loading', false)
+        logger(timer(t0))
         this.showElem('Line1', true)
         this.showElem('Line2', true)
         // elemVisibility(this.ui, 'Loading', false, 200)
@@ -190,8 +187,8 @@ class UI {
             this.showElem('Blocked Button', true)
             // elemVisibility(this.ui, 'Blocked Button', true, 200)
         } else {
-            this.showElem('Math Input', true)
             this.showElem('Math Question', true)
+            this.showElem('Math Input', true)
             this.showElem('Not Blocked Button', true)
             // elemVisibility(this.ui, 'Math Input', true, 200)
             // elemVisibility(this.ui, 'Math Question', true, 200)
@@ -199,7 +196,6 @@ class UI {
         }
         // elemVisibility(this.ui, 'Time Left', true, 300)
         // elemVisibility(this.ui, 'Times Used', true, 300)
-        
     }
 
     setInformation(app) {
@@ -235,7 +231,7 @@ class UI {
     }
 
     createMathExercise(difficulty) {
-        logger = create_logger('UI: Math', false)
+        let logger = create_logger('UI: Math', false)
 
         let randint = (min, max) => {return Math.floor(Math.random() * (max - min + 1)) + min}
 
@@ -315,7 +311,7 @@ function sleep(ms) {return new Promise(resolve => setTimeout(resolve, ms))}
 
 async function launch_task(task_name) {
 
-    logger = create_logger('launch_task', false)
+    let logger = create_logger('launch_task', false)
     logger('launching: ' + task_name)
 
     performTask(task_name, glob.higher_prio);
@@ -365,7 +361,7 @@ function logging(path, global_debugging=true) {
     // this.global_debugging = global_debugging;
     writeFile(path, '', false);
 
-    return function create_logger(name, debugging) {
+    return function create_logger(name, debugging=true) {
 
         return function(msg) {
             if (debugging && global_debugging) {
