@@ -85,7 +85,7 @@ class Logging:
                                                fromaddr='', 
                                                toaddrs='huy_hoang@neuralaim.com',
                                                subject='',
-                                               credentials=('neuralaim.error@gmail.com', 'tthuecqexirybsve'))
+                                               credentials=('neuralaim.error@gmail.com', ''))
             self.smtp_handler.setLevel(levels['error'])
             self.smtp_handler.setFormatter(formatter_stream)
 
