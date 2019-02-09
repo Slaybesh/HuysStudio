@@ -113,6 +113,8 @@ class Logging:
         self.logger = self.loggers[name]
         return self.logger
 
+
+
     def debug(self, msg):
         self.executer.submit(self.logger.debug, msg)
 
