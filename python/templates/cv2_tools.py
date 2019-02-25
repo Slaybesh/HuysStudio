@@ -2,7 +2,6 @@ import time
 
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
 
 import __init__
 from huys_code.python.templates.decorators import timer
@@ -62,44 +61,6 @@ def get_template_loc(screen, template):
 
     return prob, loc
 
-
-def test_canny_plt(img):
-    edges1 = cv2.Canny(img, 100, 200)
-    edges2 = cv2.Canny(img, 0, 0)
-    edges3 = cv2.Canny(img, 1000, 1000)
-    edges4 = cv2.Canny(img, 200, 100)
-
-    plt.subplot(311)
-    plt.imshow(img, cmap = 'gray')
-    plt.title('Original Image')
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.subplot(321)
-    plt.imshow(edges1, cmap = 'gray')
-    plt.title('Edge Image1')
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.subplot(322)
-    plt.imshow(edges2, cmap = 'gray')
-    plt.title('Edge Image2')
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.subplot(323)
-    plt.imshow(edges3, cmap = 'gray')
-    plt.title('Edge Image3')
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.subplot(324)
-    plt.imshow(edges4, cmap = 'gray')
-    plt.title('Edge Image4')
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.show()
 
 def test_canny_vid(img):
 
