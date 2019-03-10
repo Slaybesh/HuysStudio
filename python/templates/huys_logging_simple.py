@@ -1,25 +1,20 @@
-import sys
 import logging
-import logging.handlers
 import os
-from concurrent import futures
-
-levels = {
-    'debug': logging.DEBUG,
-    'info': logging.INFO,
-    'warning': logging.WARNING,
-    'error': logging.ERROR,
-    'critical': logging.CRITICAL}
-
-
 
 class Logging:
-    def __init__(self, name, level='error', filter_str='', 
-                 create_file=False):
 
-        self.executer = futures.ThreadPoolExecutor(max_workers=2)
+    levels = {
+        'debug': logging.DEBUG,
+        'info': logging.INFO,
+        'warning': logging.WARNING,
+        'error': logging.ERROR,
+        'critical': logging.CRITICAL
+    }
 
-        self.log_level = levels[level]
+
+    def __init__(self, name, level='error', filter_str='', create_file=False):
+
+        self.log_level = self.levels[level]
         self.filter_str = filter_str
         self.create_file = create_file
 
@@ -33,14 +28,15 @@ class Logging:
         self.stream_handler.addFilter(logging.Filter(self.filter_str))
 
         self.error_stream_handler = logging.StreamHandler()
-        self.error_stream_handler.setLevel(levels['error'])
+        self.error_stream_handler.setLevel(self.levels['error'])
         self.error_stream_handler.setFormatter(formatter_stream)
 
         if create_file:
-            if not os.path.exists('logs'): os.makedirs('logs')
+            if not os.path.exists('logs'):
+                os.makedirs('logs')
 
-            self.file_handler = logging.FileHandler('logs/{}_error.log'.format(name))
-            self.file_handler.setLevel(levels['error'])
+            self.file_handler = logging.FileHandler(f'logs/{name}_error.log')
+            self.file_handler.setLevel(self.levels['error'])
             self.file_handler.setFormatter(formatter_file)
 
         self.logger = None
