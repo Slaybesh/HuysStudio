@@ -12,16 +12,18 @@ class Logging:
     }
 
 
-    def __init__(self, name, level='error', filter_str='', create_file=False):
+    def __init__(self, name, level='error', filter_str='', print_=True,create_file=False, time=True):
 
         self.log_level = self.levels[level]
         self.filter_str = filter_str
+        self.print = print_
         self.create_file = create_file
 
         # formatter_stream = logging.Formatter(f'%(levelname)s: {name}.%(name)s: line %(lineno)d: %(message)s')
         formatter_stream = logging.Formatter('%(levelname)s: {}.%(name)s: line %(lineno)d: %(message)s'.format(name))
         formatter_file = logging.Formatter('%(levelname)s: {}.%(name)s: line %(lineno)d: %(message)s'.format(name))
-        # formatter_file = logging.Formatter('%(asctime)s: %(levelname)s: %(name)s: line %(lineno)d: %(message)s', '%d.%m.%y %H:%M:%S')
+        if time:
+            formatter_file = logging.Formatter('%(asctime)s: %(levelname)s: %(name)s: line %(lineno)d: %(message)s', '%d.%m.%y %H:%M:%S')
 
         self.stream_handler = logging.StreamHandler()
         self.stream_handler.setLevel(self.log_level)
@@ -35,6 +37,10 @@ class Logging:
         if create_file:
             if not os.path.exists('logs'):
                 os.makedirs('logs')
+
+            #TODO: empty file before use, add option for that
+            with open(f'logs/{name}_error.log', 'w'):
+                pass
 
             self.file_handler = logging.FileHandler(f'logs/{name}_error.log')
             self.file_handler.setLevel(self.log_level)
@@ -51,7 +57,8 @@ class Logging:
 
             new_logger.propagate = False
             new_logger.setLevel(self.log_level)
-            new_logger.addHandler(self.stream_handler)
+            if self.print:
+                new_logger.addHandler(self.stream_handler)
             if self.filter_str:
                 new_logger.addHandler(self.error_stream_handler)
             if self.create_file:
