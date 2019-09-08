@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    // "target": "esnext",
+    "module": "system",
+    "outDir": "dist",
+    "outFile": "dist/bundle",
+    "watch": true,
+  },
+
+}

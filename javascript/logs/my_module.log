@@ -1,0 +1,95 @@
+DEBUG 16:26:47:885  my_logger: debug message,second message,123,651,156,1
+INFO  16:26:47:888  my_logger: info message
+WARN  16:26:47:889  my_logger: warning message
+ERROR 16:26:47:890  my_logger: error message
+DEBUG 16:26:47:891  my_logger 2: debug message,second message,third message
+DEBUG 16:27:06:334  my_logger: debug message second message 123,651,156,1
+INFO  16:27:06:399  my_logger: info message
+WARN  16:27:06:401  my_logger: warning message
+DEBUG 16:27:06:409  my_logger 2: debug message second message third message
+ERROR 16:27:06:405  my_logger: error message
+DEBUG 16:27:28:905  my_logger: debug message second message 123,651,156,1
+WARN  16:27:28:910  my_logger: warning message
+INFO  16:27:28:909  my_logger: info message
+DEBUG 16:27:28:911  my_logger 2: debug message second message third message
+ERROR 16:27:28:911  my_logger: error message
+DEBUG 16:28:41:373  my_logger: undefined"debug message""second message"[123,651,156,1]
+INFO  16:28:41:377  my_logger: undefined"info message"
+WARN  16:28:41:377  my_logger: undefined"warning message"
+ERROR 16:28:41:377  my_logger: undefined"error message"
+DEBUG 16:28:41:378  my_logger 2: undefined"debug message""second message""third message"
+DEBUG 16:29:30:492  my_logger: debug message,second message,123,651,156,1
+INFO  16:29:30:495  my_logger: info message
+WARN  16:29:30:495  my_logger: warning message
+ERROR 16:29:30:495  my_logger: error message
+DEBUG 16:29:30:496  my_logger 2: debug message,second message,third message
+DEBUG 16:29:33:557  my_logger: debug message,second message,123,651,156,1
+INFO  16:29:33:573  my_logger: info message
+WARN  16:29:33:574  my_logger: warning message
+ERROR 16:29:33:575  my_logger: error message
+DEBUG 16:29:33:576  my_logger 2: debug message,second message,third message
+DEBUG 16:29:39:983  my_logger: debug message second message 123,651,156,1
+INFO  16:29:39:992  my_logger: info message
+WARN  16:29:39:993  my_logger: warning message
+ERROR 16:29:39:994  my_logger: error message
+DEBUG 16:29:39:994  my_logger 2: debug message second message third message
+DEBUG 16:29:52:767  my_logger: debug message,second message,123,651,156,1
+INFO  16:29:52:773  my_logger: info message
+WARN  16:29:52:774  my_logger: warning message
+ERROR 16:29:52:776  my_logger: error message
+DEBUG 16:29:52:777  my_logger 2: debug message,second message,third message
+DEBUG 16:30:56:355  my_logger: undefined"debug message""second message"[123,651,156,1]
+INFO  16:30:56:374  my_logger: undefined"info message"
+WARN  16:30:56:376  my_logger: undefined"warning message"
+ERROR 16:30:56:378  my_logger: undefined"error message"
+DEBUG 16:30:56:379  my_logger 2: undefined"debug message""second message""third message"
+DEBUG 16:31:22:800  my_logger: undefined"debug message" "second message" [123,651,156,1] 
+INFO  16:31:22:803  my_logger: undefined"info message" 
+WARN  16:31:22:804  my_logger: undefined"warning message" 
+ERROR 16:31:22:805  my_logger: undefined"error message" 
+DEBUG 16:31:22:806  my_logger 2: undefined"debug message" "second message" "third message" 
+DEBUG 16:31:36:810  my_logger: undefined"debug message" "second message" [123,651,156,1] 
+INFO  16:31:36:816  my_logger: undefined"info message" 
+WARN  16:31:36:817  my_logger: undefined"warning message" 
+ERROR 16:31:36:818  my_logger: undefined"error message" 
+DEBUG 16:31:36:819  my_logger 2: undefined"debug message" "second message" "third message" 
+DEBUG 16:31:58:615  my_logger: "debug message" "second message" [123,651,156,1] 
+INFO  16:31:58:630  my_logger: "info message" 
+WARN  16:31:58:631  my_logger: "warning message" 
+ERROR 16:31:58:632  my_logger: "error message" 
+DEBUG 16:31:58:633  my_logger 2: "debug message" "second message" "third message" 
+DEBUG 16:32:27:408  my_logger: 
+INFO  16:32:27:419  my_logger: 
+WARN  16:32:27:420  my_logger: 
+ERROR 16:32:27:421  my_logger: 
+DEBUG 16:32:27:421  my_logger 2: 
+DEBUG 16:32:57:967  my_logger: 
+INFO  16:32:57:979  my_logger: 
+WARN  16:32:57:983  my_logger: 
+ERROR 16:32:57:986  my_logger: 
+DEBUG 16:32:57:988  my_logger 2: 
+DEBUG 16:33:28:587  my_logger: debug message second message 123,651,156,1 
+WARN  16:33:28:593  my_logger: warning message 
+ERROR 16:33:28:594  my_logger: error message 
+DEBUG 16:33:28:595  my_logger 2: debug message second message third message 
+INFO  16:33:28:592  my_logger: info message 
+DEBUG 16:34:46:547  my_logger: debug message second message 123,651,156,1 
+WARN  16:34:46:556  my_logger: warning message 
+ERROR 16:34:46:559  my_logger: error message 
+DEBUG 16:34:46:561  my_logger 2: debug message second message third message 
+INFO  16:34:46:555  my_logger: info message 
+DEBUG 16:35:35:480  my_logger: debug message second message [123,651,156,1] 
+INFO  16:35:35:483  my_logger: info message 
+WARN  16:35:35:485  my_logger: warning message 
+ERROR 16:35:35:485  my_logger: error message 
+DEBUG 16:35:35:485  my_logger 2: debug message second message third message 
+DEBUG 16:35:59:270  my_logger: debug message {"asd":"asd","erg":"wef"} [123,651,156,1] 
+WARN  16:35:59:310  my_logger: warning message 
+DEBUG 16:35:59:340  my_logger 2: debug message second message third message 
+ERROR 16:35:59:330  my_logger: error message 
+INFO  16:35:59:300  my_logger: info message 
+DEBUG 18:30:25:668  my_logger: debug message {"asd":"asd","erg":"wef"} [123,651,156,1] 
+INFO  18:30:25:672  my_logger: info message 
+WARN  18:30:25:673  my_logger: warning message 
+ERROR 18:30:25:674  my_logger: error message 
+DEBUG 18:30:25:674  my_logger 2: debug message second message third message 

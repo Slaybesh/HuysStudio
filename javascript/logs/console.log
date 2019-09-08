@@ -1,0 +1,5 @@
+DEBUG 18:30:25:668  my_module: my_logger: debug message {"asd":"asd","erg":"wef"} [123,651,156,1] 
+INFO  18:30:25:672  my_module: my_logger: info message 
+WARN  18:30:25:673  my_module: my_logger: warning message 
+ERROR 18:30:25:674  my_module: my_logger: error message 
+DEBUG 18:30:25:674  my_module: my_logger 2: debug message second message third message 

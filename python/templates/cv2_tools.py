@@ -4,26 +4,26 @@ import cv2
 import numpy as np
 
 import __init__
-from huys_code.python.templates.decorators import timer
-from huys_code.python.templates.huys_logging_simple import Logging
+from Sandbox.python.templates.decorators import timer
+from Sandbox.python.templates.huys_logging import Logging
 
 
 logging = Logging('cv2_tools', 'debug', filter_str='', create_file=False)
 
 
-#region display
+# region display
 def show_img(name, img):
     cv2.imshow(name, cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+
 
 def wait_img(wait=0):
     cv2.waitKey(wait)
     cv2.destroyAllWindows()
 
 
+# endregion
 
-#endregion
-
-#region manipulation
+# region manipulation
 def cut_img(img, template, loc):
     """ cuts input image to size of template
     input: 
@@ -35,32 +35,45 @@ def cut_img(img, template, loc):
      """
     height, width, _ = template.shape
     return img[loc[1]:loc[1] + height, loc[0]:loc[0] + width]
-#endregion
+# endregion
 
-#region information
-
+# region information
 def get_template_loc(screen, template):
     """ 
     input: screen, the big img
     input2: template, the smaller img
-        
+
     output: prob, loc 
     """
     logger = logging.get_logger('get_template_loc')
 
     result = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
-    _, prob, _, loc  = cv2.minMaxLoc(result)
+    _, prob, _, loc = cv2.minMaxLoc(result)
 
     logger.debug(f'normal prob: {prob}')
 
-
-    
-    result = cv2.matchTemplate(screen, template, cv2.TM_CCOEFF_NORMED)
-    _, prob, _, loc  = cv2.minMaxLoc(result)
-    
-
     return prob, loc
 
+def masker(img):
+
+    lower_boundry = np.array([[0, 0, 0]])
+    upper_boundry = np.array([[255, 255, 255]])
+    thresholded = cv2.inRange(img, lower_boundry, upper_boundry)
+    # copy thresholded for paint bucket operation
+    img_flood = thresholded.copy()
+    # cv2.imshow('1', thresholded)
+
+    h, w = thresholded.shape[:2]
+
+    cv2.floodFill(img_flood, np.zeros((h+2, w+2), np.uint8), (0,0), 255)
+    # cv2.imshow('2', img_flood)
+
+    img_inv = cv2.bitwise_not(img_flood)
+    # cv2.imshow('3', img_inv)
+    # img_masked = thresholded | img_inv
+
+    # cv2.imshow('4', img_masked)
+    return img_inv
 
 def test_canny_vid(img):
 
@@ -82,7 +95,6 @@ def test_canny_vid(img):
 
     input()
     cv2.destroyAllWindows()
-
 
 
 if __name__ == '__main__':
