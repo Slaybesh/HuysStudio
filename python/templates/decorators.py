@@ -85,3 +85,35 @@ def timer_loop(n=100, repeat=1):
         return wrapper
 
     return loop
+
+
+class Skeleton:
+  def __init__(self, fn):
+    self.fn = fn
+
+  def __call__(self):
+    return self.fn('arg')
+
+  def get(arg):
+    def decorator(fn):
+      @wraps(fn)
+      def decorated(*args, **kwargs):
+        self.method()
+        return fn(arg, *args, **kwargs)
+      return decorated
+    return decorator
+
+  def method(self):
+    print('method')
+
+def get(arg):
+  def decorator(fn):
+    @wraps(fn)
+    def decorated(*args, **kwargs):
+      return fn(arg, *args, **kwargs)
+    return decorated
+  return decorator
+
+@Skeleton.get('arg')
+def test_fn(ret):
+  print(ret)
